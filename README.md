@@ -24,15 +24,15 @@
 因QQ群太多，近期已开通QQ频道，频道内随时发布每天新增的资源，习惯使用QQ的朋友可以加入：
 
 点击链接加入腾讯频道【夸客网盘搜索】：https://pd.qq.com/s/5purwm5le?b=5
-<img src="https://github.com/user-attachments/assets/e71f55df-7366-4698-986a-029dc77c1fdd" alt="a6fab2e3038f514a2f17523f66be9db" width="500" height="300">
-![a6fab2e3038f514a2f17523f66be9db](https://github.com/user-attachments/assets/e71f55df-7366-4698-986a-029dc77c1fdd)
+<img src="https://github.com/user-attachments/assets/e71f55df-7366-4698-986a-029dc77c1fdd" alt="a6fab2e3038f514a2f17523f66be9db" width="300" height="500">
+
 
 
 # QQ交流群
 
 为方便大家交流，新建QQ群：963115963
-<img src="https://github.com/user-attachments/assets/79f1a920-2649-42d1-9a06-c2892a4122c5" alt="01229241076c65547d51fa16ac057f5" width="500" height="300">
-![01229241076c65547d51fa16ac057f5](https://github.com/user-attachments/assets/79f1a920-2649-42d1-9a06-c2892a4122c5)
+<img src="https://github.com/user-attachments/assets/79f1a920-2649-42d1-9a06-c2892a4122c5" alt="01229241076c65547d51fa16ac057f5" width="300" height="500">
+
 
 如遇群满注意看群介绍里的新群号。
 
