@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 interface Account {
-  id: string;
+  id: number;
   name: string;
   platform: string;
   usedSpace: number;
@@ -124,7 +124,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteAccount = async (id: string, name: string) => {
+  const handleDeleteAccount = async (id: number, name: string) => {
     if (!confirm(`确定删除账号「${name}」吗？`)) return;
     try {
       const res = await fetch(`/api/admin/accounts?id=${id}`, {
@@ -197,7 +197,7 @@ export default function AdminPage() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-brand-500" />
-            <span className="font-semibold text-text-primary dark:text-text-primary-dark">网盘搜 · 管理后台</span>
+            <span className="font-semibold text-text-primary dark:text-text-primary-dark">夸克搜 · 管理后台</span>
           </div>
           <button onClick={handleLogout} className="flex items-center gap-1 text-sm text-text-secondary hover:text-red-500 transition-colors">
             <LogOut className="w-4 h-4" />

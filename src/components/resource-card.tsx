@@ -15,9 +15,10 @@ export interface ResourceItem {
 interface ResourceCardProps {
   resource: ResourceItem;
   index: number;
+  onInvalid?: (url: string) => void;
 }
 
-export function ResourceCard({ resource, index }: ResourceCardProps) {
+export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [loading, setLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -49,6 +50,12 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
 
       const data = await res.json();
       if (!res.ok) {
+        // 资源失效 (410 Gone)，通知父组件移除该卡片
+        if (data.invalid && onInvalid) {
+          setError('该资源已失效，正在移除...');
+          setTimeout(() => onInvalid(resource.url), 1500);
+          return;
+        }
         throw new Error(data.error || '获取资源失败');
       }
 
@@ -58,7 +65,7 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
     } finally {
       setLoading(false);
     }
-  }, [resource.url, resource.password]);
+  }, [resource.url, resource.password, resource.note, title, onInvalid]);
 
   return (
     <>

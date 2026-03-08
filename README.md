@@ -112,8 +112,8 @@ docker compose exec web npx prisma db push
 | `ADMIN_TOKEN` | 管理后台访问令牌 | `changeme` |
 | `SAVE_DIR` | 网盘转存目录 | `/来自搜索站` |
 | `SHARE_EXPIRE_MINUTES` | 资源过期清理周期(分钟)，Worker按此周期清理 | `15` |
-| `PORT` | Web 服务对外端口 | `6000` |
-| `NEXT_PUBLIC_SITE_URL` | 网站公开访问地址 | `http://localhost:6000` |
+| `PORT` | Web 服务对外端口 | `6060` |
+| `NEXT_PUBLIC_SITE_URL` | 网站公开访问地址 | `http://localhost:6060` |
 | `NEXT_PUBLIC_SITE_NAME` | 网站名称 | `夸克搜` |
 
 ## 使用流程

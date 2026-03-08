@@ -1,4 +1,4 @@
-# 夸克搜 - 部署文档
+﻿# 夸克搜 - 部署文档
 
 > 本文档详细说明如何在 Ubuntu 22.04 + 1Panel 环境下部署「夸克搜」夸克网盘资源搜索平台。
 
@@ -28,7 +28,7 @@
 
 | 项目 | 最低配置 | 推荐配置 |
 |------|----------|----------|
-| CPU  | 1 核     | 2 核+    |
+| CPU  | 1 核     | 2 核     |
 | 内存 | 1 GB     | 2 GB+    |
 | 硬盘 | 20 GB    | 40 GB+   |
 | 带宽 | 1 Mbps   | 5 Mbps+  |
@@ -51,24 +51,24 @@
 ## 2. 架构概览
 
 ```
-                    ┌─────────────┐
-                    │   Nginx     │
-                    │  (反向代理)  │
-                    └──────┬──────┘
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-       ┌──────┴──────┐         ┌───────┴────────┐
-       │  Next.js    │         │  PanSou API    │
-       │  Web App    │         │  (搜索接口)     │
-       │  :6000      │         │  :8888         │
-       └──────┬──────┘         └────────────────┘
+                    ┌─────────────────┐
+                    │    Nginx        │
+                    │  (反向代理)      │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┴──────────────┐
+              │                             │
+       ┌──────┴──────┐         ┌────────────┴───────┐
+       │  Next.js    │         │  PanSou API        │
+       │  Web App    │         │  (搜索接口)         │
+       │  :6060      │         │  :8888             │
+       └──────┬──────┘         └────────────────────┘
               │
     ┌─────────┼─────────┐
     │         │         │
 ┌───┴───┐ ┌──┴──┐ ┌───┴────┐
 │Postgres│ │Redis│ │Worker  │
-│ :5432  │ │:6379│ │(清理)   │
+│ :5432  │ │:6379│ │(清理)  │
 └────────┘ └─────┘ └────────┘
 ```
 
@@ -162,7 +162,7 @@ SHARE_EXPIRE_MINUTES=15
 SAVE_DIR=/来自搜索站
 
 # Web 服务对外端口（容器内固定3000，此处为宿主机映射端口）
-PORT=6000
+PORT=6060
 ```
 
 ### 4.2 启动服务
@@ -186,8 +186,8 @@ docker compose logs -f
 # 进入 web 容器
 docker compose exec web sh
 
-# 执行数据库迁移
-npx prisma db push
+# 执行数据库迁移（锁定 Prisma 版本，避免自动升级到不兼容的新版本）
+npx prisma@5.22.0 db push
 
 # 退出容器
 exit
@@ -197,13 +197,13 @@ exit
 
 ```bash
 # 健康检查
-curl http://localhost:6000/api/health
+curl http://localhost:6060/api/health
 
 # 预期返回
 # {"status":"ok","timestamp":"...","services":{"database":"ok","redis":"ok"}}
 ```
 
-浏览器访问 `http://your-server-ip:6000` 应该能看到首页。
+浏览器访问 `http://your-server-ip:6060` 应该能看到首页。
 
 ---
 
@@ -334,7 +334,7 @@ curl -X POST http://localhost:8888/api/search \
 1. 进入 1Panel → **网站** → **创建网站**
 2. 选择 **反向代理**
 3. 域名填写你的域名
-4. 代理地址填 `http://127.0.0.1:6000`
+4. 代理地址填 `http://127.0.0.1:6060`
 5. 保存后在 **配置文件** 中添加以下优化项
 
 ### 7.2 手动 Nginx 配置
@@ -364,14 +364,14 @@ server {
 
     # 静态资源缓存
     location /_next/static/ {
-        proxy_pass http://127.0.0.1:6000;
+        proxy_pass http://127.0.0.1:6060;
         expires 365d;
         add_header Cache-Control "public, immutable";
     }
 
     # API 路由 - 不缓存
     location /api/ {
-        proxy_pass http://127.0.0.1:6000;
+        proxy_pass http://127.0.0.1:6060;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -384,7 +384,7 @@ server {
 
     # 主应用
     location / {
-        proxy_pass http://127.0.0.1:6000;
+        proxy_pass http://127.0.0.1:6060;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -605,7 +605,7 @@ docker compose up -d --build worker
 如果更新涉及数据库 Schema 变更：
 
 ```bash
-docker compose exec web npx prisma db push
+docker compose exec web npx prisma@5.22.0 db push
 ```
 
 ### 12.4 回滚
@@ -632,7 +632,7 @@ docker compose logs worker
 
 # 常见原因：
 # 1. 环境变量未配置 → 检查 .env 文件
-# 2. 端口被占用 → netstat -tlnp | grep 6000
+# 2. 端口被占用 → netstat -tlnp | grep 6060
 # 3. 数据库未就绪 → docker compose logs postgres
 ```
 
@@ -645,7 +645,7 @@ curl -X POST http://localhost:8888/api/search \
   -d '{"keyword":"测试"}'
 
 # 2. 检查 PANSOU_API_URL 配置是否正确
-# 3. 如果是 Docker 内互访，确保网络互通
+# 3. 如果是 Docker 内互通，确保网络互通
 docker compose exec web wget -qO- http://pansou:8888/api/search
 ```
 
@@ -659,7 +659,7 @@ docker compose exec web wget -qO- http://pansou:8888/api/search
 # 清理 Worker 日志查看：
 docker compose logs worker | grep "delete"
 
-# 3. 检查转存额度
+# 3. 检查转存频率
 # 夸克网盘有每日转存次数限制
 ```
 
@@ -715,9 +715,9 @@ cat backup_20240101.sql | docker compose exec -T postgres psql -U wangpanso -d w
 | `DB_PASSWORD` | ✅ | `changeme123` | PostgreSQL 数据库密码 |
 | `ADMIN_TOKEN` | ✅ | `changeme` | 管理后台访问令牌 |
 | `PANSOU_API_URL` | ✅ | `http://localhost:8888` | PanSou 搜索 API 地址 |
-| `NEXT_PUBLIC_SITE_URL` | ✅ | `http://localhost:6000` | 网站公开访问地址（含协议和端口） |
+| `NEXT_PUBLIC_SITE_URL` | ✅ | `http://localhost:6060` | 网站公开访问地址（含协议和端口） |
 | `NEXT_PUBLIC_SITE_NAME` | ❌ | `夸克搜` | 网站名称 |
-| `PORT` | ❌ | `6000` | Web 服务对外端口（容器内固定3000） |
+| `PORT` | ❌ | `6060` | Web 服务对外端口（容器内固定3000） |
 | `SHARE_EXPIRE_MINUTES` | ❌ | `15` | 资源过期清理周期（分钟），非夸克分享有效期 |
 | `SAVE_DIR` | ❌ | `/来自搜索站` | 夸克网盘转存目录 |
 | `PANSOU_AUTH_TOKEN` | ❌ | 空 | PanSou API 鉴权 Token |
@@ -727,12 +727,12 @@ cat backup_20240101.sql | docker compose exec -T postgres psql -U wangpanso -d w
 
 | 端口 | 服务 | 外部可访问 |
 |------|------|-----------|
-| 6000 | Next.js Web | 是（宿主机映射端口，建议通过 Nginx 代理） |
+| 6060 | Next.js Web | 是（宿主机映射端口，建议通过 Nginx 代理） |
 | 5432 | PostgreSQL | 否（仅 Docker 内部访问） |
 | 6379 | Redis | 否（仅 Docker 内部访问） |
 | 8888 | PanSou API | 否（建议仅内部访问） |
 
-> **说明**：PostgreSQL 和 Redis 已移除宿主机端口映射，仅允许 Docker 内部网络访问，无需额外安全加固。
+> **说明**：PostgreSQL 和 Redis 已移除对宿主机端口映射，仅允许 Docker 内部网络访问，无需额外安全加固。
 
 ### 生产环境安全加固
 

@@ -8,7 +8,7 @@ import { verifyAdmin, unauthorizedResponse } from '@/lib/admin-auth';
 export async function GET(req: NextRequest) {
   if (!verifyAdmin(req)) return unauthorizedResponse();
 
-  const accounts = await prisma.cloudAccount.findMany({
+  const rawAccounts = await prisma.cloudAccount.findMany({
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,
@@ -22,6 +22,13 @@ export async function GET(req: NextRequest) {
       _count: { select: { resources: true } },
     },
   });
+
+  // BigInt 无法被 JSON.stringify 序列化，需要转换为 Number
+  const accounts = rawAccounts.map((a) => ({
+    ...a,
+    usedSpace: Number(a.usedSpace),
+    totalSpace: Number(a.totalSpace),
+  }));
 
   return NextResponse.json({ accounts });
 }

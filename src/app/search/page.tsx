@@ -20,6 +20,12 @@ function SearchResultsContent() {
   const [searchInput, setSearchInput] = useState(query);
   const [error, setError] = useState<string | null>(null);
 
+  // 当资源验证失效时，从列表中移除
+  const handleInvalidResource = (url: string) => {
+    setResults((prev) => prev.filter((r) => r.url !== url));
+    setTotal((prev) => Math.max(0, prev - 1));
+  };
+
   useEffect(() => {
     if (!query) return;
     setSearchInput(query);
@@ -153,7 +159,7 @@ function SearchResultsContent() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {results.map((resource, index) => (
-                <ResourceCard key={`${resource.url}-${index}`} resource={resource} index={index} />
+                <ResourceCard key={`${resource.url}-${index}`} resource={resource} index={index} onInvalid={handleInvalidResource} />
               ))}
             </div>
 
