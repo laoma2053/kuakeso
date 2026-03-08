@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+RUN apk add --no-cache openssl
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm config set registry https://registry.npmmirror.com && npm install --omit=dev
+
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+COPY src/worker ./src/worker/
+COPY src/lib ./src/lib/
+COPY tsconfig.json ./
+
+RUN npm install -g tsx --registry https://registry.npmmirror.com
+
+CMD ["tsx", "src/worker/cleanup.ts"]

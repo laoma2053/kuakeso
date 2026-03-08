@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-gradient: linear-gradient(135deg, #5B6CF9 0%, #8B5CF6 100%);
+    --surface-bg: #FAFBFF;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  .dark {
+    --surface-bg: #0F1117;
+  }
+
+  body {
+    @apply bg-surface text-text-primary antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  .dark body {
+    @apply bg-surface-dark text-text-primary-dark;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-2.5
+           bg-gradient-to-r from-[#5B6CF9] to-[#8B5CF6]
+           text-white font-medium rounded-xl
+           shadow-md hover:shadow-lg
+           transition-all duration-200
+           hover:opacity-90 active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-2.5
+           bg-white dark:bg-surface-card-dark
+           text-text-primary dark:text-text-primary-dark
+           font-medium rounded-xl
+           border border-border dark:border-border-dark
+           shadow-card hover:shadow-card-hover
+           transition-all duration-200
+           hover:border-brand-300 active:scale-[0.98];
+  }
+
+  .card {
+    @apply bg-white dark:bg-surface-card-dark
+           rounded-2xl shadow-card
+           border border-border/50 dark:border-border-dark/50
+           transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  .search-input {
+    @apply w-full px-5 py-3.5
+           bg-white dark:bg-surface-card-dark
+           border-2 border-border dark:border-border-dark
+           rounded-2xl
+           text-text-primary dark:text-text-primary-dark
+           placeholder:text-text-secondary/50
+           transition-all duration-300
+           focus:outline-none focus:border-brand-400 focus:shadow-search
+           focus:scale-[1.01];
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-[#5B6CF9] to-[#8B5CF6] bg-clip-text text-transparent;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 渐入动画 */
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-fade-in > * {
+  animation: staggerFadeIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.stagger-fade-in > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-fade-in > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-fade-in > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-fade-in > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-fade-in > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-fade-in > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-fade-in > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-fade-in > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-fade-in > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-fade-in > *:nth-child(10) { animation-delay: 0.5s; }

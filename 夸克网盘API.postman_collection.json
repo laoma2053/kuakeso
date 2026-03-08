@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "0a93b474-0078-4157-9d6f-61a832ab67ed",
+		"name": "夸克网盘API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "7014462"
+	},
+	"item": [
+		{
+			"name": "查询指定目录",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/file/sort?pr=ucpro&fr=pc&uc_param_str=&pdir_fid=227418f79ade451bb3cc993bfb94a99f&_page=1&_size=50&_fetch_total=1&_fetch_sub_dirs=0&_sort=file_type:asc,updated_at:desc&q=IDEA0",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"file",
+						"sort"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						},
+						{
+							"key": "pdir_fid",
+							"value": "227418f79ade451bb3cc993bfb94a99f"
+						},
+						{
+							"key": "_page",
+							"value": "1"
+						},
+						{
+							"key": "_size",
+							"value": "50"
+						},
+						{
+							"key": "_fetch_total",
+							"value": "1"
+						},
+						{
+							"key": "_fetch_sub_dirs",
+							"value": "0"
+						},
+						{
+							"key": "_sort",
+							"value": "file_type:asc,updated_at:desc"
+						},
+						{
+							"key": "q",
+							"value": "IDEA0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查询分享的任务",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/task?pr=ucpro&fr=pc&uc_param_str=&task_id=6b5150ac0ebb463abc2fda7975b4401d&retry_index=1",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"task"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						},
+						{
+							"key": "task_id",
+							"value": "6b5150ac0ebb463abc2fda7975b4401d"
+						},
+						{
+							"key": "retry_index",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "全盘搜索",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/file/search?pr=ucpro&fr=pc&uc_param_str=&q=IDEA&_page=1&_size=50&_fetch_total=1&_sort=file_type:desc,updated_at:desc&_is_hl=1",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"file",
+						"search"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						},
+						{
+							"key": "q",
+							"value": "IDEA"
+						},
+						{
+							"key": "_page",
+							"value": "1"
+						},
+						{
+							"key": "_size",
+							"value": "50"
+						},
+						{
+							"key": "_fetch_total",
+							"value": "1"
+						},
+						{
+							"key": "_sort",
+							"value": "file_type:desc,updated_at:desc"
+						},
+						{
+							"key": "_is_hl",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "我的分享",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/share/mypage/detail?pr=ucpro&fr=pc&uc_param_str=&_page=1&_size=50&_order_field=created_at&_order_type=desc&_fetch_total=1&_fetch_notify_follow=1",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"share",
+						"mypage",
+						"detail"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						},
+						{
+							"key": "_page",
+							"value": "1"
+						},
+						{
+							"key": "_size",
+							"value": "50"
+						},
+						{
+							"key": "_order_field",
+							"value": "created_at"
+						},
+						{
+							"key": "_order_type",
+							"value": "desc"
+						},
+						{
+							"key": "_fetch_total",
+							"value": "1"
+						},
+						{
+							"key": "_fetch_notify_follow",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "分享资源",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fid_list\": [\r\n        \"a5c87fe17b55470899f676f49273aa6e\"\r\n    ],\r\n    \"title\": \"曼波10分钟台词\",\r\n    \"url_type\": 2,\r\n    \"passcode\": \"F63v\",\r\n    \"expired_type\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/share?pr=ucpro&fr=pc&uc_param_str=",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"share"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查询分享的详情",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "cookie",
+						"value": "{{cookie}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"share_id\": \"2765a7628650405d8a9615075c639e1b\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://drive-pc.quark.cn/1/clouddrive/share/password?pr=ucpro&fr=pc&uc_param_str=",
+					"protocol": "https",
+					"host": [
+						"drive-pc",
+						"quark",
+						"cn"
+					],
+					"path": [
+						"1",
+						"clouddrive",
+						"share",
+						"password"
+					],
+					"query": [
+						{
+							"key": "pr",
+							"value": "ucpro"
+						},
+						{
+							"key": "fr",
+							"value": "pc"
+						},
+						{
+							"key": "uc_param_str",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

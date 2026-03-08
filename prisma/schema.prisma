@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CloudAccount {
+  id             Int        @id @default(autoincrement())
+  name           String     @default("") @db.VarChar(100)
+  platform       String     @default("quark") @db.VarChar(20)
+  nickname       String?    @db.VarChar(100)
+  cookie         String     @db.Text
+  status         String     @default("active") @db.VarChar(20) // active / banned / expired
+  isActive       Boolean    @default(true) @map("is_active")
+  totalSpace     BigInt     @default(0) @map("total_space")
+  usedSpace      BigInt     @default(0) @map("used_space")
+  dailySaveCount Int        @default(0) @map("daily_save_count")
+  lastUsedAt     DateTime?  @map("last_used_at")
+  lastCheckAt    DateTime?  @map("last_check_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  resources Resource[]
+  cleanupTasks CleanupTask[]
+
+  @@map("cloud_accounts")
+}
+
+model Resource {
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(500)
+  description     String?   @db.Text
+  originalUrl     String    @map("original_url") @db.VarChar(1000)
+  platform        String    @default("quark") @db.VarChar(20)
+  shareUrl        String?   @map("share_url") @db.VarChar(1000)
+  shareId         String?   @map("share_id") @db.VarChar(100)
+  fileIds         String?   @map("file_ids") @db.Text  // JSON array
+  fileFid         String?   @map("file_fid") @db.VarChar(200)  // 转存后的文件fid
+  accountId       Int?      @map("account_id")
+  status          String    @default("active") @db.VarChar(20) // active / expired / deleted
+  slug            String    @unique @db.VarChar(200)
+  seoTitle        String?   @map("seo_title") @db.VarChar(200)
+  seoDescription  String?   @map("seo_description") @db.VarChar(500)
+  fileType        String?   @map("file_type") @db.VarChar(50)
+  fileSize        BigInt    @default(0) @map("file_size")
+  viewCount       Int       @default(0) @map("view_count")
+  saveCount       Int       @default(0) @map("save_count")
+  sourceDate      DateTime? @map("source_date")
+  expiresAt       DateTime? @map("expires_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  account CloudAccount? @relation(fields: [accountId], references: [id])
+
+  @@index([slug])
+  @@index([originalUrl])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("resources")
+}
+
+model SiteConfig {
+  key       String   @id @db.VarChar(100)
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_config")
+}
+
+model SearchLog {
+  id           Int      @id @default(autoincrement())
+  keyword      String   @db.VarChar(500)
+  resultsCount Int      @default(0) @map("results_count")
+  ip           String?  @db.VarChar(50)
+  userAgent    String?  @map("user_agent") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([keyword])
+  @@index([createdAt])
+  @@map("search_logs")
+}
+
+model CleanupTask {
+  id           Int       @id @default(autoincrement())
+  accountId    Int?      @map("account_id")
+  status       String    @default("pending") @db.VarChar(20)
+  filesDeleted Int       @default(0) @map("files_deleted")
+  spaceFreed   BigInt    @default(0) @map("space_freed")
+  errorMessage String?   @map("error_message") @db.Text
+  executedAt   DateTime  @default(now()) @map("executed_at")
+
+  account CloudAccount? @relation(fields: [accountId], references: [id])
+
+  @@map("cleanup_tasks")
+}
