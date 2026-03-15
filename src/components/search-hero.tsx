@@ -81,25 +81,25 @@ export function SearchHero() {
       </div>
 
       {/* 底部信息 - 多快好省 */}
-      <div className="mt-10 sm:mt-14 flex items-center gap-8 sm:gap-12 text-center">
+      <div className="mt-10 sm:mt-14 flex items-center gap-6 sm:gap-10 text-center">
         <div>
-          <div className="text-2xl sm:text-3xl font-bold text-gray-800">多</div>
-          <div className="text-xs text-gray-500 mt-1">百万资源</div>
+          <div className="text-lg sm:text-xl font-semibold text-gray-500">多</div>
+          <div className="text-xs text-gray-400 mt-0.5">百万资源</div>
         </div>
-        <div className="w-px h-10 bg-gray-200" />
+        <div className="w-px h-8 bg-gray-200" />
         <div>
-          <div className="text-2xl sm:text-3xl font-bold text-gray-800">快</div>
-          <div className="text-xs text-gray-500 mt-1">秒级响应</div>
+          <div className="text-lg sm:text-xl font-semibold text-gray-500">快</div>
+          <div className="text-xs text-gray-400 mt-0.5">秒级响应</div>
         </div>
-        <div className="w-px h-10 bg-gray-200" />
+        <div className="w-px h-8 bg-gray-200" />
         <div>
-          <div className="text-2xl sm:text-3xl font-bold text-gray-800">好</div>
-          <div className="text-xs text-gray-500 mt-1">每日更新</div>
+          <div className="text-lg sm:text-xl font-semibold text-gray-500">好</div>
+          <div className="text-xs text-gray-400 mt-0.5">每日更新</div>
         </div>
-        <div className="w-px h-10 bg-gray-200" />
+        <div className="w-px h-8 bg-gray-200" />
         <div>
-          <div className="text-2xl sm:text-3xl font-bold text-gray-800">省</div>
-          <div className="text-xs text-gray-500 mt-1">免费获取</div>
+          <div className="text-lg sm:text-xl font-semibold text-gray-500">省</div>
+          <div className="text-xs text-gray-400 mt-0.5">免费获取</div>
         </div>
       </div>
     </section>
