@@ -5,6 +5,9 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ResourceDetail } from '@/components/resource-detail';
 
+// 此页面需要数据库访问，禁止构建时预渲染
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: { slug: string };
 }
@@ -20,11 +23,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resource = await getResource(params.slug);
 
   if (!resource) {
-    return { title: '资源不存在 - 网盘搜' };
+    return { title: '资源不存在 - 夸克搜' };
   }
 
-  const title = `${resource.title} - 夸克网盘资源下载 - 网盘搜`;
-  const description = `免费获取「${resource.title}」夸克网盘资源，高速下载，安全可靠。网盘搜为您提供最新最全的网盘资源搜索服务。`;
+  const title = `${resource.title} - 夸克网盘资源下载 - 夸克搜`;
+  const description = `免费获取「${resource.title}」夸克网盘资源，高速下载，安全可靠。夸克搜为您提供最新最全的网盘资源搜索服务。`;
 
   return {
     title,
@@ -57,7 +60,7 @@ export default async function ResourcePage({ params }: PageProps) {
     datePublished: resource.createdAt.toISOString(),
     provider: {
       '@type': 'Organization',
-      name: '网盘搜',
+      name: '夸克搜',
     },
   };
 
