@@ -1,23 +1,24 @@
 # ============================================
 # 夸克搜 - Docker Compose 部署配置
 # 使用方法: docker compose up -d --build
+# 所有 ${} 变量从 .env 文件读取，请先配置 .env
 # ============================================
 
 services:
   # -------- PostgreSQL 数据库 --------
   postgres:
     image: postgres:16-alpine
-    container_name: wangpanso-db
+    container_name: kuakeso-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: wangpanso
-      POSTGRES_USER: wangpanso
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      POSTGRES_DB: kuakeso
+      POSTGRES_USER: kuakeso
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       TZ: Asia/Shanghai                          # 容器时区
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U wangpanso"]
+      test: ["CMD-SHELL", "pg_isready -U kuakeso"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,9 +26,9 @@ services:
   # -------- Redis 缓存 & 队列 --------
   redis:
     image: redis:7-alpine
-    container_name: wangpanso-redis
+    container_name: kuakeso-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru  # AOF持久化、最大内存256MB、LRU淘汰策略
     environment:
       TZ: Asia/Shanghai                          # 容器时区
     volumes:
@@ -40,24 +41,22 @@ services:
 
   # -------- Next.js Web 应用 --------
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: wangpanso-web
+    build: .
+    container_name: kuakeso-web
     restart: unless-stopped
     ports:
-      - "${PORT:-6060}:3000"                     # 宿主机端口:容器内端口（容器内固定3000）
+      - "${PORT}:3000"                            # 宿主机端口:容器内端口（容器内固定3000）
     environment:
       TZ: Asia/Shanghai                          # 容器时区
-      DATABASE_URL: postgresql://wangpanso:${DB_PASSWORD:-changeme123}@postgres:5432/wangpanso
+      DATABASE_URL: postgresql://kuakeso:${DB_PASSWORD}@postgres:5432/kuakeso
       REDIS_URL: redis://redis:6379
-      ADMIN_TOKEN: ${ADMIN_TOKEN:-changeme}       # 管理后台令牌
-      PANSOU_API_URL: ${PANSOU_API_URL:-http://localhost:8888}  # PanSou搜索API地址
-      PANSOU_API_TOKEN: ${PANSOU_API_TOKEN:-}
-      SAVE_DIR: ${SAVE_DIR:-/来自搜索站}           # 夸克网盘转存目录
-      SHARE_EXPIRE_MINUTES: ${SHARE_EXPIRE_MINUTES:-15}  # 资源过期清理周期（分钟）
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:6060}
-      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-夸克搜}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}                # 管理后台令牌
+      PANSOU_API_URL: ${PANSOU_API_URL}          # PanSou搜索API地址
+      PANSOU_API_TOKEN: ${PANSOU_API_TOKEN}      # PanSou API鉴权Token
+      SAVE_DIR: ${SAVE_DIR}                      # 夸克网盘转存目录
+      SHARE_EXPIRE_MINUTES: ${SHARE_EXPIRE_MINUTES}  # 资源过期清理周期（分钟）
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}    # 网站公开访问地址
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME}  # 网站名称
     depends_on:
       postgres:
         condition: service_healthy
@@ -69,14 +68,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.worker
-    container_name: wangpanso-worker
+    container_name: kuakeso-worker
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai                          # 容器时区
-      DATABASE_URL: postgresql://wangpanso:${DB_PASSWORD:-changeme123}@postgres:5432/wangpanso
+      DATABASE_URL: postgresql://kuakeso:${DB_PASSWORD}@postgres:5432/kuakeso
       REDIS_URL: redis://redis:6379
-      SAVE_DIR: ${SAVE_DIR:-/来自搜索站}
-      SHARE_EXPIRE_MINUTES: ${SHARE_EXPIRE_MINUTES:-15}
+      SAVE_DIR: ${SAVE_DIR}
+      SHARE_EXPIRE_MINUTES: ${SHARE_EXPIRE_MINUTES}
     depends_on:
       postgres:
         condition: service_healthy
