@@ -23,8 +23,7 @@ export function Footer() {
 
           {/* 右：版权 */}
           <div className="text-xs text-text-secondary dark:text-text-secondary-dark md:text-right">
-            <p>本站不存储任何资源，仅提供搜索服务</p>
-            <p className="mt-1">如有侵权请联系删除 · © {new Date().getFullYear()} 夸克搜</p>
+            <p>本站不存储任何资源 · © {new Date().getFullYear()} 夸克搜</p>
           </div>
 
         </div>
