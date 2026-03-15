@@ -77,26 +77,26 @@ function SearchResultsContent() {
     <div className="min-h-screen flex flex-col bg-bg-primary dark:bg-bg-primary-dark">
 
       {/* Sticky Header：Logo + 搜索框 + 导航 */}
-      <div className="sticky top-0 z-50 bg-bg-primary/90 dark:bg-bg-primary-dark/90 backdrop-blur-md border-b border-border dark:border-border-dark">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+      <div className="sticky top-0 z-50 bg-bg-primary dark:bg-bg-primary-dark border-b border-border dark:border-border-dark">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-3 sm:gap-6">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <img src="/pic/logo.png" alt="夸克搜" className="h-8 w-auto object-contain" />
+            <img src="/pic/logo.png" alt="夸克搜" className="h-7 sm:h-9 w-auto object-contain" />
           </Link>
 
           {/* 搜索框 */}
-          <form onSubmit={handleSearch} className="flex-1">
+          <form onSubmit={handleSearch} className="w-full max-w-2xl">
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="搜索资源..."
-              className="w-full px-5 py-2.5
+              placeholder="输入关键词搜索资源..."
+              className="w-full px-4 sm:px-5 py-2.5 sm:py-3.5
                          bg-white dark:bg-gray-800
                          border border-gray-200 dark:border-gray-700
                          rounded-full
-                         text-gray-800 dark:text-gray-100 text-sm
+                         text-gray-800 dark:text-gray-100 text-sm sm:text-base
                          placeholder:text-gray-400
                          shadow-[0_0_8px_rgba(32,33,36,0.08)]
                          transition-shadow duration-300 ease-out
@@ -106,13 +106,13 @@ function SearchResultsContent() {
             />
           </form>
 
+          {/* 弹性空白，将导航推到右侧 */}
+          <div className="flex-1" />
+
           {/* 导航 */}
           <nav className="flex items-center gap-4 flex-shrink-0">
             <Link href="/" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
               首页
-            </Link>
-            <Link href="/about" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
-              关于
             </Link>
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

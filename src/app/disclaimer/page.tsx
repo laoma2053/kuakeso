@@ -21,7 +21,7 @@ export default function DisclaimerPage() {
             <h2 className="text-lg font-semibold text-text-primary dark:text-text-primary-dark mb-2">1. 服务性质</h2>
             <p className="text-text-secondary dark:text-text-secondary-dark leading-relaxed">
               夸克搜（以下简称"本站"）是一个网盘资源搜索引擎，仅提供信息检索服务。
-              本站不存储、上传、复制或传播任何文件内容，所有搜索结果均来源于互联网公开信息。
+              本站<span className="font-semibold text-text-primary dark:text-text-primary-dark">不存储、上传、复制或传播</span>任何文件内容，所有搜索结果均<span className="font-semibold text-text-primary dark:text-text-primary-dark">来源于互联网公开信息</span>。
             </p>
           </section>
 

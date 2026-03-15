@@ -14,9 +14,6 @@ export function Header() {
           <Link href="/" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
             首页
           </Link>
-          <Link href="/about" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
-            关于
-          </Link>
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
