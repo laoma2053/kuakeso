@@ -46,6 +46,9 @@ services:
     restart: unless-stopped
     ports:
       - "${PORT}:3000"                            # 宿主机端口:容器内端口（容器内固定3000）
+    dns:
+      - 223.5.5.5                                 # 阿里DNS，解决容器内DNS解析慢/超时
+      - 8.8.8.8
     environment:
       TZ: Asia/Shanghai                          # 容器时区
       DATABASE_URL: postgresql://kuakeso:${DB_PASSWORD}@postgres:5432/kuakeso

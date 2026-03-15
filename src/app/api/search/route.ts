@@ -38,12 +38,12 @@ export async function POST(req: NextRequest) {
         userAgent,
       },
     }).catch((err: unknown) => {
-      console.error('[API/search] Failed to log search:', err);
+      console.error('⚠️ [搜索] 记录搜索日志失败:', err);
     });
 
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('[API/search] Error:', error);
+    console.error('❌ [搜索] 搜索接口异常:', error);
 
     if (error.message?.includes('请求过于频繁')) {
       return NextResponse.json(

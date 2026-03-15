@@ -5,12 +5,21 @@ import { extractPwdId } from '@/lib/utils';
 import { redis } from '@/lib/redis';
 
 /**
- * 单条资源有效性验证 (PanCheck 两步验证法)
+ * 资源有效性验证结果
+ * - 'valid': 资源有效
+ * - 'invalid': 资源确认失效（API明确返回错误）
+ * - 'unknown': 网络异常/超时，无法判断（不应视为失效）
  */
-async function validateSingleResource(url: string): Promise<boolean> {
+type ValidateResult = 'valid' | 'invalid' | 'unknown';
+
+/**
+ * 单条资源有效性验证 (PanCheck 两步验证法)
+ * 区分"资源确认失效"和"网络异常无法判断"两种情况
+ */
+async function validateSingleResource(url: string): Promise<ValidateResult> {
   try {
     const extracted = extractPwdId(url);
-    if (!extracted) return false;
+    if (!extracted) return 'invalid';
 
     const api = new QuarkAPI('');
 
@@ -20,8 +29,8 @@ async function validateSingleResource(url: string): Promise<boolean> {
       new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)),
     ]);
 
-    if (stokenResult === null) return false; // 超时视为无效
-    if (!stokenResult.ok || !stokenResult.stoken) return false;
+    if (stokenResult === null) return 'unknown'; // 超时 → 无法判断，不视为失效
+    if (!stokenResult.ok || !stokenResult.stoken) return 'invalid'; // API明确返回失败
 
     // 步骤2: 用 stoken 获取文件列表
     const fileList = await Promise.race([
@@ -29,10 +38,19 @@ async function validateSingleResource(url: string): Promise<boolean> {
       new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)),
     ]);
 
-    if (fileList === null) return false; // 超时视为无效
-    return fileList.length > 0;
-  } catch {
-    return false;
+    if (fileList === null) return 'unknown'; // 超时 → 无法判断
+    return fileList.length > 0 ? 'valid' : 'invalid';
+  } catch (error: any) {
+    // 网络错误（ETIMEDOUT, ECONNREFUSED等）→ 无法判断，不应视为失效
+    const isNetworkError = error?.cause?.code === 'ETIMEDOUT'
+      || error?.cause?.code === 'ECONNREFUSED'
+      || error?.cause?.code === 'ENOTFOUND'
+      || error?.message?.includes('fetch failed');
+    if (isNetworkError) {
+      console.warn('⚠️ [有效性检测] 网络异常, 跳过验证:', error?.cause?.code || error?.message);
+      return 'unknown';
+    }
+    return 'unknown';
   }
 }
 
@@ -60,14 +78,14 @@ async function removeFromSearchCache(shareUrl: string): Promise<void> {
       } catch {}
     }
   } catch (err) {
-    console.error('[save] removeFromSearchCache error:', err);
+    console.error('❌ [转存] 清除搜索缓存失败:', err);
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { shareUrl, password, title } = body;
+    const { shareUrl, title } = body;
 
     if (!shareUrl || typeof shareUrl !== 'string') {
       return NextResponse.json(
@@ -84,31 +102,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ⭐ 先验证资源有效性
-    const isValid = await validateSingleResource(shareUrl);
-    if (!isValid) {
-      // 资源无效，从搜索缓存中移除
+    // ⭐ 先验证资源有效性（仅在确认失效时拒绝，网络异常时跳过验证继续尝试）
+    const validity = await validateSingleResource(shareUrl);
+    if (validity === 'invalid') {
+      // 资源确认失效，从搜索缓存中移除
       removeFromSearchCache(shareUrl).catch(() => {});
       return NextResponse.json(
         { error: '该资源已失效或不存在，请换一个资源保存', invalid: true },
         { status: 410 }
       );
     }
+    // validity === 'unknown' 时不阻断，继续尝试转存（让转存流程自己判断）
 
     const result = await saveAndShareResource(shareUrl, title || '未命名资源');
 
-    if (!result) {
-      return NextResponse.json(
-        { error: '获取资源失败，请稍后重试' },
-        { status: 500 }
-      );
+    if (!result.ok) {
+      const message = result.message || '获取资源失败，请稍后重试';
+      console.error('❌ [转存] 转存分享失败:', message);
+
+      if (message.includes('资源已失效') || message.includes('不存在') || message.includes('分享内容为空')) {
+        removeFromSearchCache(shareUrl).catch(() => {});
+        return NextResponse.json({ error: message, invalid: true }, { status: 410 });
+      }
+
+      if (message.includes('空间不足') || message.includes('容量')) {
+        return NextResponse.json({ error: '服务器存储空间不足，请稍后重试' }, { status: 503 });
+      }
+
+      if (message.includes('暂无可用')) {
+        return NextResponse.json({ error: message }, { status: 503 });
+      }
+
+      return NextResponse.json({ error: message }, { status: 500 });
     }
 
     return NextResponse.json({
       shareUrl: result.shareUrl,
     });
   } catch (error: any) {
-    console.error('[API/save] Error:', error);
+    console.error('💥 [转存] 接口异常:', error);
 
     const message = error.message || '保存失败';
 

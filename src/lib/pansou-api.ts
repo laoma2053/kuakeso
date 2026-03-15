@@ -72,7 +72,7 @@ export class PanSouAPI {
         results: quarkResults,
       };
     } catch (error) {
-      console.error('PanSou search error:', error);
+      console.error('❌ [搜索API] PanSou搜索请求失败:', error);
       return { total: 0, results: [] };
     }
   }

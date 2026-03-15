@@ -12,7 +12,7 @@ async function main() {
   const result = await prisma.cloudAccount.updateMany({
     data: { dailySaveCount: 0 },
   });
-  console.log(`[ResetDaily] 已重置 ${result.count} 个账号的每日转存计数`);
+  console.log(`🔄 [每日重置] 已重置 ${result.count} 个账号的每日转存计数`);
 }
 
 main()

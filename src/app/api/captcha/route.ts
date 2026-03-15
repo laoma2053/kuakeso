@@ -9,7 +9,7 @@ export async function GET() {
     const captcha = await generateCaptcha();
     return NextResponse.json(captcha);
   } catch (error) {
-    console.error('[API/captcha] Generate error:', error);
+    console.error('❌ [验证码] 生成失败:', error);
     return NextResponse.json(
       { error: '验证码生成失败' },
       { status: 500 }
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const success = await verifyCaptcha(id, String(answer));
     return NextResponse.json({ success });
   } catch (error) {
-    console.error('[API/captcha] Verify error:', error);
+    console.error('❌ [验证码] 校验失败:', error);
     return NextResponse.json(
       { success: false, error: '验证失败' },
       { status: 500 }

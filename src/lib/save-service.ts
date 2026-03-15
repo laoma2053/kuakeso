@@ -149,7 +149,7 @@ export async function saveAndShareResource(
       slug,
     };
   } catch (error) {
-    console.error('Save and share error:', error);
+    console.error('❌ [转存服务] 转存分享过程异常:', error);
     return { ok: false, message: '转存过程中出错' };
   } finally {
     await releaseAccountLock(account.id);

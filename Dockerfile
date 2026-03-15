@@ -49,6 +49,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
+# sharp is required for image optimization in standalone mode
+# Install AFTER standalone copy so it's not overwritten
+RUN npm install --os=linux --cpu=x64 sharp@0.33.5
+
 USER nextjs
 
 EXPOSE 3000

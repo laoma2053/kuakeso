@@ -1,13 +1,15 @@
 /**
  * 夸克网盘API封装
  * 参考: https://github.com/Cp0204/quark-auto-save
+ * 参考：https://github.com/Lampon/PanCheck
  */
 
 import { extractPwdId, sleep } from '@/lib/utils';
 
-const BASE_URL = 'https://drive-pc.quark.cn';
+const BASE_URL = 'https://drive-h.quark.cn';
+const PAN_URL = 'https://pan.quark.cn';
 const USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) quark-cloud-drive/3.14.2 Chrome/112.0.5615.165 Electron/24.1.3.8 Safari/537.36 Channel/pckk_other_ch';
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 export interface QuarkAccountInfo {
   nickname: string;
@@ -46,6 +48,10 @@ export class QuarkAPI {
     this.cookie = cookie.trim();
   }
 
+  private static readonly REQUEST_TIMEOUT = 15000; // 15秒超时
+  private static readonly MAX_RETRIES = 2; // 最多重试2次（共3次请求）
+  private static readonly RETRY_DELAY = 1000; // 重试间隔1秒
+
   private async request(method: string, url: string, options: {
     params?: Record<string, any>;
     body?: any;
@@ -53,7 +59,17 @@ export class QuarkAPI {
     const headers: Record<string, string> = {
       'cookie': this.cookie,
       'content-type': 'application/json',
+      'accept': 'application/json, text/plain, */*',
       'user-agent': USER_AGENT,
+      'origin': PAN_URL,
+      'referer': `${PAN_URL}/`,
+      'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-site': 'same-site',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-dest': 'empty',
+      'accept-language': 'zh-CN,zh;q=0.9',
     };
 
     let fullUrl = url;
@@ -65,21 +81,59 @@ export class QuarkAPI {
       fullUrl += '?' + searchParams.toString();
     }
 
-    try {
-      const fetchOptions: RequestInit = {
-        method,
-        headers,
-      };
-      if (options.body) {
-        fetchOptions.body = JSON.stringify(options.body);
+    let lastError: any = null;
+    for (let attempt = 0; attempt <= QuarkAPI.MAX_RETRIES; attempt++) {
+      if (attempt > 0) {
+        console.warn(`🔄 [夸克API] 第${attempt}次重试 (共${QuarkAPI.MAX_RETRIES}次): ${method} ${url}`);
+        await sleep(QuarkAPI.RETRY_DELAY * attempt);
       }
 
-      const response = await fetch(fullUrl, fetchOptions);
-      return await response.json();
-    } catch (error) {
-      console.error(`QuarkAPI request error: ${method} ${url}`, error);
-      return { status: 500, code: 1, message: 'request error' };
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), QuarkAPI.REQUEST_TIMEOUT);
+
+        const fetchOptions: RequestInit = {
+          method,
+          headers,
+          signal: controller.signal,
+        };
+        if (options.body) {
+          fetchOptions.body = JSON.stringify(options.body);
+        }
+
+        const response = await fetch(fullUrl, fetchOptions);
+        clearTimeout(timeoutId);
+        const data = await response.json();
+
+        // 非成功响应时记录详细日志
+        if (data?.code !== 0 && data?.status !== 200) {
+          console.warn(`⚠️ [夸克API] 响应异常: ${method} ${url}`, JSON.stringify({
+            status: data?.status,
+            code: data?.code,
+            message: data?.message,
+          }));
+        }
+
+        return data;
+      } catch (error: any) {
+        lastError = error;
+        const isTimeout = error?.name === 'AbortError'
+          || error?.cause?.code === 'ETIMEDOUT'
+          || error?.cause?.code === 'UND_ERR_CONNECT_TIMEOUT'
+          || error?.message?.includes('fetch failed');
+
+        if (!isTimeout) {
+          // 非超时错误不重试
+          console.error(`❌ [夸克API] 请求失败: ${method} ${url}`, error);
+          return { status: 500, code: 1, message: 'request error' };
+        }
+
+        console.warn(`⏱️ [夸克API] 连接超时 (第${attempt + 1}次): ${method} ${url}`);
+      }
     }
+
+    console.error(`💀 [夸克API] 重试全部耗尽: ${method} ${url}`, lastError);
+    return { status: 500, code: 1, message: 'request timeout after retries' };
   }
 
   /** 获取账号信息 */
@@ -205,14 +259,14 @@ export class QuarkAPI {
     pwdId: string,
     stoken: string
   ): Promise<{ ok: boolean; taskId?: string; message?: string }> {
+    // 转存接口使用 drive.quark.cn（不带 -pc），与 Pearsoon/quark、henggedaren/quark-save 一致
     const response = await this.request('POST',
-      `${BASE_URL}/1/clouddrive/share/sharepage/save`, {
+      `https://drive.quark.cn/1/clouddrive/share/sharepage/save`, {
       params: {
         pr: 'ucpro',
         fr: 'pc',
         uc_param_str: '',
-        app: 'clouddrive',
-        __dt: Math.floor(Math.random() * 5 * 60 * 1000),
+        __dt: Math.floor(Math.random() * 900) + 100,
         __t: Date.now(),
       },
       body: {
@@ -226,9 +280,11 @@ export class QuarkAPI {
       },
     });
 
-    if (response?.code === 0) {
+    if (response?.code === 0 && response.data?.task_id) {
+      console.log('✅ [夸克API] 转存成功, task_id:', response.data.task_id);
       return { ok: true, taskId: response.data.task_id };
     }
+    console.error('❌ [夸克API] 转存失败:', JSON.stringify(response));
     return { ok: false, message: response?.message || '转存失败' };
   }
 
@@ -428,7 +484,11 @@ export class QuarkAPI {
   }
 
   /**
-   * 创建公开分享链接
+   * 创建公开分享链接（三步流程）
+   * 1. POST /share → 获取 task_id
+   * 2. 轮询 task → 获取 share_id
+   * 3. POST /share/password → 获取 share_url
+   *
    * expired_type: 1=永久, 2=1天, 3=7天, 4=30天
    * url_type: 1=公开链接, 2=需要提取码
    */
@@ -437,25 +497,111 @@ export class QuarkAPI {
     title: string = '分享文件',
     expiredType: number = 1
   ): Promise<ShareInfo | null> {
+    // 步骤1: 创建分享任务，获取 task_id
     const response = await this.request('POST',
       `${BASE_URL}/1/clouddrive/share`, {
-      params: { pr: 'ucpro', fr: 'pc', uc_param_str: '' },
+      params: {
+        pr: 'ucpro',
+        fr: 'pc',
+        uc_param_str: '',
+        __dt: Math.floor(Math.random() * 900) + 100,
+        __t: Date.now(),
+      },
       body: {
         fid_list: fidList,
         title,
-        url_type: 1,            // 1=公开链接
+        url_type: 1,
         expired_type: expiredType,
-        passcode_type: 1,       // 1=无提取码（公开）
       },
     });
 
-    if (response?.code === 0 && response.data) {
+    if (response?.code !== 0 || !response.data?.task_id) {
+      console.error('❌ [夸克API] 创建分享第1步失败(创建任务):', response?.message);
+      return null;
+    }
+
+    const taskId = response.data.task_id;
+
+    // 步骤2: 轮询任务获取 share_id
+    const shareId = await this.queryShareTask(taskId);
+    if (!shareId) {
+      console.error('❌ [夸克API] 创建分享第2步失败(获取share_id): 未返回share_id');
+      return null;
+    }
+
+    // 步骤3: 通过 share_id 获取分享链接
+    const shareResult = await this.getSharePassword(shareId);
+    if (!shareResult) {
+      console.error('❌ [夸克API] 创建分享第3步失败(获取分享链接): 未返回share_url');
+      return null;
+    }
+
+    return {
+      share_id: shareId,
+      share_url: shareResult.share_url,
+      pwd_id: shareResult.pwd_id || '',
+      passcode: shareResult.passcode || '',
+      title,
+    };
+  }
+
+  /**
+   * 轮询分享任务，获取 share_id
+   * 分享任务的返回结构与转存任务不同，share_id 在 data 顶层
+   */
+  private async queryShareTask(taskId: string): Promise<string | null> {
+    for (let retryIndex = 0; retryIndex < 10; retryIndex++) {
+      const response = await this.request('GET',
+        `${BASE_URL}/1/clouddrive/task`, {
+        params: {
+          pr: 'ucpro',
+          fr: 'pc',
+          uc_param_str: '',
+          task_id: taskId,
+          retry_index: retryIndex,
+          __dt: Math.floor(Math.random() * 900) + 100,
+          __t: Date.now(),
+        },
+      });
+
+      if (response?.status !== 200) {
+        return null;
+      }
+
+      // 分享任务完成后，share_id 在 data.share_id
+      if (response.data?.share_id) {
+        return response.data.share_id;
+      }
+
+      // status === 2 表示任务完成
+      if (response.data?.status === 2 && response.data?.share_id) {
+        return response.data.share_id;
+      }
+
+      await sleep(1000);
+    }
+    return null;
+  }
+
+  /**
+   * 通过 share_id 获取分享链接和提取码
+   */
+  private async getSharePassword(shareId: string): Promise<{
+    share_url: string;
+    pwd_id?: string;
+    passcode?: string;
+  } | null> {
+    const response = await this.request('POST',
+      `${BASE_URL}/1/clouddrive/share/password`, {
+      params: { pr: 'ucpro', fr: 'pc', uc_param_str: '' },
+      body: { share_id: shareId },
+    });
+
+    if (response?.code === 0 && response.data?.share_url) {
       return {
-        share_id: response.data.share_id,
-        share_url: response.data.share_url || `https://pan.quark.cn/s/${response.data.pwd_id}`,
+        share_url: response.data.share_url,
         pwd_id: response.data.pwd_id,
-        passcode: '',
-        title,
+        passcode: response.data.passcode,
       };
     }
     return null;
@@ -484,18 +630,23 @@ export class QuarkAPI {
       return { ok: false, message: '无效的分享链接' };
     }
     const { pwdId, passcode } = extracted;
+    console.log('📎 [转存分享] 步骤1/7 解析链接: pwdId=', pwdId);
 
     // 2. 获取stoken
     const stokenResult = await this.getStoken(pwdId, passcode);
     if (!stokenResult.ok || !stokenResult.stoken) {
+      console.error('❌ [转存分享] 步骤2/7 获取stoken失败:', stokenResult.message);
       return { ok: false, message: stokenResult.message || '资源已失效' };
     }
+    console.log('🔑 [转存分享] 步骤2/7 获取stoken成功');
 
     // 3. 获取分享文件列表
     const fileList = await this.getShareDetail(pwdId, stokenResult.stoken);
     if (fileList.length === 0) {
+      console.error('❌ [转存分享] 步骤3/7 获取文件列表失败: 分享内容为空');
       return { ok: false, message: '分享内容为空' };
     }
+    console.log('📂 [转存分享] 步骤3/7 获取文件列表:', fileList.length, '个文件');
 
     // 如果只有一个文件夹，进入该文件夹获取内容
     let finalFileList = fileList;
@@ -503,14 +654,17 @@ export class QuarkAPI {
       const innerFiles = await this.getShareDetail(pwdId, stokenResult.stoken, fileList[0].fid);
       if (innerFiles.length > 0) {
         finalFileList = innerFiles;
+        console.log('📂 [转存分享] 步骤3/7 进入子文件夹, 获取到', innerFiles.length, '个文件');
       }
     }
 
     // 4. 确保保存目录存在
     const saveDirFid = await this.ensureDir(saveDirPath);
     if (!saveDirFid) {
+      console.error('❌ [转存分享] 步骤4/7 创建保存目录失败:', saveDirPath);
       return { ok: false, message: '创建保存目录失败' };
     }
+    console.log('📁 [转存分享] 步骤4/7 保存目录就绪: fid=', saveDirFid);
 
     // 5. 转存
     const fidList = finalFileList.map(f => f.fid);
@@ -520,21 +674,27 @@ export class QuarkAPI {
       fidList, fidTokenList, saveDirFid, pwdId, stokenResult.stoken
     );
     if (!saveResult.ok || !saveResult.taskId) {
+      console.error('❌ [转存分享] 步骤5/7 转存文件失败:', saveResult.message);
       return { ok: false, message: saveResult.message || '转存失败' };
     }
+    console.log('💾 [转存分享] 步骤5/7 转存任务已提交: task_id=', saveResult.taskId);
 
     // 6. 等待任务完成
     const taskResult = await this.queryTask(saveResult.taskId);
     if (!taskResult.ok || !taskResult.done || !taskResult.savedFids?.length) {
+      console.error('❌ [转存分享] 步骤6/7 等待转存任务失败:', taskResult.message);
       return { ok: false, message: taskResult.message || '转存任务失败' };
     }
+    console.log('✅ [转存分享] 步骤6/7 转存完成, 文件ID:', taskResult.savedFids);
 
     // 7. 创建公开分享（设为1天过期，双保险：即使清理失败也会自动过期）
     const shareTitle = fileList.length === 1 ? fileList[0].file_name : `分享${fileList.length}个文件`;
     const shareInfo = await this.createShare(taskResult.savedFids, shareTitle, 2);
     if (!shareInfo) {
+      console.error('❌ [转存分享] 步骤7/7 创建分享链接失败');
       return { ok: false, message: '创建分享链接失败', savedFids: taskResult.savedFids };
     }
+    console.log('🔗 [转存分享] 步骤7/7 分享链接已生成:', shareInfo.share_url);
 
     return {
       ok: true,

@@ -15,12 +15,13 @@ const CLEANUP_INTERVAL = 15 * 60 * 1000; // 15分钟
 const BATCH_SIZE = 50;
 const SAVE_CACHE_PREFIX = 'saved:';
 
-const connection = new IORedis(REDIS_URL, { maxRetriesPerRequest: null });
 const redis = new IORedis(REDIS_URL);
 const prisma = new PrismaClient();
 
+const redisConnection = { url: REDIS_URL, maxRetriesPerRequest: null };
+
 // 创建队列
-const cleanupQueue = new Queue('cleanup', { connection });
+const cleanupQueue = new Queue('cleanup', { connection: redisConnection });
 
 /**
  * 清理工作逻辑
@@ -31,7 +32,7 @@ const cleanupQueue = new Queue('cleanup', { connection });
  * 5. 更新数据库状态
  */
 async function performCleanup() {
-  console.log(`[Cleanup] 开始清理任务 @ ${new Date().toISOString()}`);
+  console.log(`🧹 [清理任务] 开始执行 @ ${new Date().toISOString()}`);
 
   try {
     // 1. 查询过期资源
@@ -45,11 +46,11 @@ async function performCleanup() {
     });
 
     if (expiredResources.length === 0) {
-      console.log('[Cleanup] 没有过期资源需要清理');
+      console.log('✨ [清理任务] 没有过期资源需要清理');
       return { cleaned: 0 };
     }
 
-    console.log(`[Cleanup] 发现 ${expiredResources.length} 个过期资源`);
+    console.log(`📋 [清理任务] 发现 ${expiredResources.length} 个过期资源`);
 
     // 2. 按账号分组
     const grouped = new Map<number, typeof expiredResources>();
@@ -83,7 +84,7 @@ async function performCleanup() {
 
       try {
         // 批量删除文件
-        console.log(`[Cleanup] 账号 ${account.name}: 删除 ${fids.length} 个文件`);
+        console.log(`🗑️ [清理任务] 账号「${account.name}」: 删除 ${fids.length} 个文件`);
         await api.deleteFiles(fids);
 
         // 同步删除分享链接
@@ -91,7 +92,7 @@ async function performCleanup() {
           .map((r: any) => r.shareId)
           .filter(Boolean);
         if (shareIds.length > 0) {
-          console.log(`[Cleanup] 账号 ${account.name}: 删除 ${shareIds.length} 个分享链接`);
+          console.log(`🔗 [清理任务] 账号「${account.name}」: 删除 ${shareIds.length} 个分享链接`);
           await api.deleteShare(shareIds);
         }
 
@@ -119,9 +120,9 @@ async function performCleanup() {
         }
 
         totalCleaned += resources.length;
-        console.log(`[Cleanup] 账号 ${account.name}: 清理完成`);
+        console.log(`✅ [清理任务] 账号「${account.name}」: 清理完成`);
       } catch (error) {
-        console.error(`[Cleanup] 账号 ${account.name} 清理失败:`, error);
+        console.error(`❌ [清理任务] 账号「${account.name}」清理失败:`, error);
 
         // 标记为清理失败
         await prisma.resource.updateMany({
@@ -131,10 +132,10 @@ async function performCleanup() {
       }
     }
 
-    console.log(`[Cleanup] 本次清理完成: ${totalCleaned} 个资源`);
+    console.log(`🎉 [清理任务] 本次清理完成: 共清理 ${totalCleaned} 个资源`);
     return { cleaned: totalCleaned };
   } catch (error) {
-    console.error('[Cleanup] 清理任务异常:', error);
+    console.error('💥 [清理任务] 执行异常:', error);
     throw error;
   }
 }
@@ -143,26 +144,26 @@ async function performCleanup() {
 const worker = new Worker(
   'cleanup',
   async (job) => {
-    console.log(`[Worker] 处理任务 ${job.name} #${job.id}`);
+    console.log(`⚙️ [Worker] 开始处理任务: ${job.name} #${job.id}`);
     return await performCleanup();
   },
   {
-    connection,
+    connection: redisConnection,
     concurrency: 1,
   }
 );
 
 worker.on('completed', (job, result) => {
-  console.log(`[Worker] 任务完成 #${job?.id}:`, result);
+  console.log(`✅ [Worker] 任务完成 #${job?.id}:`, result);
 });
 
 worker.on('failed', (job, err) => {
-  console.error(`[Worker] 任务失败 #${job?.id}:`, err.message);
+  console.error(`❌ [Worker] 任务失败 #${job?.id}:`, err.message);
 });
 
 // 定时添加清理任务
 async function scheduleCleanup() {
-  console.log('[Scheduler] 启动清理调度器');
+  console.log('⏰ [调度器] 清理调度器已启动, 每15分钟执行一次');
 
   // 立即执行一次
   await cleanupQueue.add('cleanup', {}, {
@@ -183,21 +184,19 @@ scheduleCleanup().catch(console.error);
 
 // 优雅关闭
 process.on('SIGTERM', async () => {
-  console.log('[Worker] 收到 SIGTERM，正在关闭...');
+  console.log('🛑 [Worker] 收到 SIGTERM, 正在优雅关闭...');
   await worker.close();
   await redis.quit();
-  await connection.quit();
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
-  console.log('[Worker] 收到 SIGINT，正在关闭...');
+  console.log('🛑 [Worker] 收到 SIGINT, 正在优雅关闭...');
   await worker.close();
   await redis.quit();
-  await connection.quit();
   await prisma.$disconnect();
   process.exit(0);
 });
 
-console.log('[Worker] 资源清理 Worker 已启动');
+console.log('🚀 [Worker] 资源清理 Worker 已启动');
