@@ -83,9 +83,11 @@ async function removeFromSearchCache(shareUrl: string): Promise<void> {
 }
 
 export async function POST(req: NextRequest) {
+  let shareUrl: string | undefined;
   try {
     const body = await req.json();
-    const { shareUrl, title } = body;
+    shareUrl = body.shareUrl;
+    const title = body.title;
 
     if (!shareUrl || typeof shareUrl !== 'string') {
       return NextResponse.json(
@@ -120,7 +122,7 @@ export async function POST(req: NextRequest) {
       const message = result.message || '获取资源失败，请稍后重试';
       console.error('❌ [转存] 转存分享失败:', message);
 
-      if (message.includes('资源已失效') || message.includes('不存在') || message.includes('分享内容为空')) {
+      if (message.includes('已失效') || message.includes('不存在') || message.includes('分享内容为空') || message.includes('封禁')) {
         removeFromSearchCache(shareUrl).catch(() => {});
         return NextResponse.json({ error: message, invalid: true }, { status: 410 });
       }
@@ -144,7 +146,8 @@ export async function POST(req: NextRequest) {
 
     const message = error.message || '保存失败';
 
-    if (message.includes('资源已失效') || message.includes('不存在')) {
+    if (message.includes('已失效') || message.includes('不存在') || message.includes('封禁')) {
+      if (shareUrl) removeFromSearchCache(shareUrl).catch(() => {});
       return NextResponse.json({ error: '该资源已失效或不存在', invalid: true }, { status: 410 });
     }
 

@@ -648,15 +648,8 @@ export class QuarkAPI {
     }
     console.log('📂 [转存分享] 步骤3/7 获取文件列表:', fileList.length, '个文件');
 
-    // 如果只有一个文件夹，进入该文件夹获取内容
-    let finalFileList = fileList;
-    if (fileList.length === 1 && fileList[0].dir) {
-      const innerFiles = await this.getShareDetail(pwdId, stokenResult.stoken, fileList[0].fid);
-      if (innerFiles.length > 0) {
-        finalFileList = innerFiles;
-        console.log('📂 [转存分享] 步骤3/7 进入子文件夹, 获取到', innerFiles.length, '个文件');
-      }
-    }
+    // 直接保存顶层文件列表（不进入子文件夹）
+    const finalFileList = fileList;
 
     // 4. 确保保存目录存在
     const saveDirFid = await this.ensureDir(saveDirPath);

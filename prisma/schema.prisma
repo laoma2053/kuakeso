@@ -38,7 +38,7 @@ model Resource {
   shareUrl        String?   @map("share_url") @db.VarChar(1000)
   shareId         String?   @map("share_id") @db.VarChar(100)
   fileIds         String?   @map("file_ids") @db.Text  // JSON array
-  fileFid         String?   @map("file_fid") @db.VarChar(200)  // 转存后的文件fid
+  fileFid         String?   @map("file_fid") @db.Text  // 转存后的文件fid(逗号分隔)
   accountId       Int?      @map("account_id")
   status          String    @default("active") @db.VarChar(20) // active / expired / deleted
   slug            String    @unique @db.VarChar(200)
