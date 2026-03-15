@@ -57,6 +57,9 @@ services:
       SHARE_EXPIRE_MINUTES: ${SHARE_EXPIRE_MINUTES}  # 资源过期清理周期（分钟）
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}    # 网站公开访问地址
       NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME}  # 网站名称
+    networks:
+      - default
+      - pansou-net                              # 与 PanSou 容器共享网络
     depends_on:
       postgres:
         condition: service_healthy
@@ -85,3 +88,8 @@ services:
 volumes:
   postgres_data:                                 # PostgreSQL 数据持久化
   redis_data:                                    # Redis 数据持久化
+
+networks:
+  pansou-net:
+    name: panso_pansou-network
+    external: true                               # 使用 PanSou 容器所在的外部网络

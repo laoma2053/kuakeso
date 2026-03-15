@@ -6,7 +6,8 @@
       "mcp__tavily__tavily_search",
       "mcp__filesystem__read_file",
       "mcp__filesystem__list_allowed_directories",
-      "mcp__chrome-devtools__list_pages"
+      "mcp__chrome-devtools__list_pages",
+      "mcp__filesystem__list_directory"
     ]
   }
 }

@@ -58,7 +58,7 @@ export class PanSouAPI {
       const data = await response.json();
 
       // 提取夸克网盘结果
-      const quarkResults: PanSouResult[] = data?.merged_by_type?.quark || [];
+      const quarkResults: PanSouResult[] = data?.data?.merged_by_type?.quark || [];
 
       // 按datetime倒序排序（更新越近越靠前）
       quarkResults.sort((a, b) => {
