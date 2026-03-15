@@ -7,13 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left: Brand */}
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold text-text-primary dark:text-text-primary-dark">网盘搜</span>
+            <img src="/pic/logo.png" alt="网盘搜" className="h-6 w-auto" />
           </div>
 
           {/* Center: Links */}

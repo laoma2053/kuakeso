@@ -20,8 +20,8 @@ export function SearchHero() {
   return (
     <section className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-80px)]">
       {/* Logo区域 - 显示logo图片 */}
-      <div className="mb-6 sm:mb-8">
-        <div className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
+      <div className="mb-4 sm:mb-5">
+        <div className="relative w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20">
           <Image
             src="/pic/logo.png"
             alt="夸克搜"
@@ -33,12 +33,12 @@ export function SearchHero() {
       </div>
 
       {/* 描述文字 */}
-      <p className="text-gray-500 text-sm sm:text-base text-center mb-6 sm:mb-8 max-w-md">
+      <p className="text-gray-500 text-sm sm:text-base text-center mb-4 sm:mb-5 max-w-md">
         聚合全网网盘资源，一键免费获取链接
       </p>
 
       {/* Search Box - 简洁风格 */}
-      <form onSubmit={handleSearch} className="w-full max-w-xl mb-6 sm:mb-8">
+      <form onSubmit={handleSearch} className="w-full max-w-xl mb-4 sm:mb-5">
         <div className="relative">
           <input
             type="text"
@@ -51,9 +51,11 @@ export function SearchHero() {
                        rounded-full
                        text-gray-800 text-base sm:text-lg
                        placeholder:text-gray-400
+                       shadow-[0_0_8px_rgba(32,33,36,0.08)]
                        transition-shadow duration-300 ease-out
-                       focus:outline-none focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15),0_1px_2px_rgba(0,0,0,0.05)]
-                       hover:shadow-[0_1px_6px_rgba(32,33,36,0.1)]"
+                       focus:outline-none
+                       hover:shadow-[0_0_16px_rgba(32,33,36,0.15)]
+                       focus:shadow-[0_0_16px_rgba(32,33,36,0.15)]"
           />
         </div>
       </form>
@@ -79,7 +81,7 @@ export function SearchHero() {
       </div>
 
       {/* 底部信息 - 多快好省 */}
-      <div className="mt-16 sm:mt-20 flex items-center gap-8 sm:gap-12 text-center">
+      <div className="mt-10 sm:mt-14 flex items-center gap-8 sm:gap-12 text-center">
         <div>
           <div className="text-2xl sm:text-3xl font-bold text-gray-800">多</div>
           <div className="text-xs text-gray-500 mt-1">百万资源</div>
