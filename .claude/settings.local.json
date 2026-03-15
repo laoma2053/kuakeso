@@ -5,7 +5,8 @@
       "mcp__chrome-devtools__take_screenshot",
       "mcp__tavily__tavily_search",
       "mcp__filesystem__read_file",
-      "mcp__filesystem__list_allowed_directories"
+      "mcp__filesystem__list_allowed_directories",
+      "mcp__chrome-devtools__list_pages"
     ]
   }
 }

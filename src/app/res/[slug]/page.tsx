@@ -70,13 +70,17 @@ export default async function ResourcePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="flex-1 max-w-3xl mx-auto px-4 py-8 w-full">
-        <ResourceDetail resource={{
-          title: resource.title,
-          shareUrl: resource.shareUrl || '',
-          slug: resource.slug,
-          createdAt: resource.createdAt.toISOString(),
-        }} />
+      <main className="flex-1 w-full">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="max-w-3xl mx-auto">
+            <ResourceDetail resource={{
+              title: resource.title,
+              shareUrl: resource.shareUrl || '',
+              slug: resource.slug,
+              createdAt: resource.createdAt.toISOString(),
+            }} />
+          </div>
+        </div>
       </main>
 
       <Footer />

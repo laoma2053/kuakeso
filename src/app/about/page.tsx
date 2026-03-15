@@ -3,8 +3,8 @@ import { Footer } from '@/components/footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '关于我们 - 网盘搜',
-  description: '网盘搜是一个免费的夸克网盘资源搜索平台，为用户提供快速、便捷的资源搜索服务。',
+  title: '关于我们 - 夸克搜',
+  description: '夸克搜是一个免费的夸克网盘资源搜索平台，为用户提供快速、便捷的资源搜索服务。',
 };
 
 export default function AboutPage() {
@@ -13,14 +13,14 @@ export default function AboutPage() {
       <Header />
       <main className="flex-1 max-w-3xl mx-auto px-4 py-12 w-full">
         <h1 className="text-2xl sm:text-3xl font-bold text-text-primary dark:text-text-primary-dark mb-6">
-          关于网盘搜
+          关于夸克搜
         </h1>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <div className="card p-6 mb-6">
             <h2 className="text-lg font-semibold text-text-primary dark:text-text-primary-dark mb-3">我们是谁</h2>
             <p className="text-text-secondary dark:text-text-secondary-dark leading-relaxed">
-              网盘搜是一个免费的网盘资源搜索平台。我们通过聚合互联网上公开分享的网盘资源链接，
+              夸克搜是一个免费的网盘资源搜索平台。我们通过聚合互联网上公开分享的网盘资源链接，
               为用户提供快速、精准的搜索服务。我们不存储任何文件内容，仅提供资源索引和搜索功能。
             </p>
           </div>

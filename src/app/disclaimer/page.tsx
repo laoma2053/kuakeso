@@ -3,8 +3,8 @@ import { Footer } from '@/components/footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '免责声明 - 网盘搜',
-  description: '网盘搜免责声明与服务条款',
+  title: '免责声明 - 夸克搜',
+  description: '夸克搜免责声明与服务条款',
 };
 
 export default function DisclaimerPage() {
@@ -20,7 +20,7 @@ export default function DisclaimerPage() {
           <section>
             <h2 className="text-lg font-semibold text-text-primary dark:text-text-primary-dark mb-2">1. 服务性质</h2>
             <p className="text-text-secondary dark:text-text-secondary-dark leading-relaxed">
-              网盘搜（以下简称"本站"）是一个网盘资源搜索引擎，仅提供信息检索服务。
+              夸克搜（以下简称"本站"）是一个网盘资源搜索引擎，仅提供信息检索服务。
               本站不存储、上传、复制或传播任何文件内容，所有搜索结果均来源于互联网公开信息。
             </p>
           </section>

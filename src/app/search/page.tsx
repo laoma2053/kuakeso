@@ -2,15 +2,17 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
-import { Search, ArrowLeft, Loader2 } from 'lucide-react';
+import { Loader2, Sun, Moon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/components/header';
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
 import { Footer } from '@/components/footer';
 import { ResourceCard, type ResourceItem } from '@/components/resource-card';
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const query = searchParams.get('q') || '';
   const page = parseInt(searchParams.get('page') || '1', 10);
 
@@ -73,35 +75,55 @@ function SearchResultsContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg-primary dark:bg-bg-primary-dark">
-      <Header />
 
-      {/* Search Bar */}
-      <div className="sticky top-0 z-30 bg-bg-primary/90 dark:bg-bg-primary-dark/90 backdrop-blur-md border-b border-border dark:border-border-dark">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <form onSubmit={handleSearch} className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => router.push('/')}
-              className="p-2 rounded-xl hover:bg-bg-secondary dark:hover:bg-bg-secondary-dark transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-text-secondary dark:text-text-secondary-dark" />
-            </button>
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="搜索资源..."
-                className="search-input text-sm py-2.5 pr-10"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-gradient-to-r from-[#5B6CF9] to-[#8B5CF6] text-white"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-            </div>
+      {/* Sticky Header：Logo + 搜索框 + 导航 */}
+      <div className="sticky top-0 z-50 bg-bg-primary/90 dark:bg-bg-primary-dark/90 backdrop-blur-md border-b border-border dark:border-border-dark">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <img src="/pic/logo.png" alt="夸克搜" className="h-8 w-auto object-contain" />
+          </Link>
+
+          {/* 搜索框 */}
+          <form onSubmit={handleSearch} className="flex-1">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="搜索资源..."
+              className="w-full px-5 py-2.5
+                         bg-white dark:bg-gray-800
+                         border border-gray-200 dark:border-gray-700
+                         rounded-full
+                         text-gray-800 dark:text-gray-100 text-sm
+                         placeholder:text-gray-400
+                         shadow-[0_0_8px_rgba(32,33,36,0.08)]
+                         transition-shadow duration-300 ease-out
+                         focus:outline-none
+                         hover:shadow-[0_0_16px_rgba(32,33,36,0.15)]
+                         focus:shadow-[0_0_16px_rgba(32,33,36,0.15)]"
+            />
           </form>
+
+          {/* 导航 */}
+          <nav className="flex items-center gap-4 flex-shrink-0">
+            <Link href="/" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
+              首页
+            </Link>
+            <Link href="/about" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
+              关于
+            </Link>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="切换主题"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute top-2 left-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </button>
+          </nav>
+
         </div>
       </div>
 
