@@ -23,12 +23,14 @@ export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) 
   const [loading, setLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [resourceTitle, setResourceTitle] = useState<string>('');
 
   const title = resource.note || extractTitle(resource.url);
   const domain = extractDomain(resource.url);
   const timeAgo = resource.datetime ? formatRelativeTime(resource.datetime) : null;
 
   const handleGetResource = () => {
+    setResourceTitle(title);
     setShowCaptcha(true);
   };
 
@@ -70,48 +72,33 @@ export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) 
   return (
     <>
       <div
-        className="card group hover:shadow-brand-sm transition-all duration-300"
+        className="card group hover:shadow-brand-sm transition-all duration-300 h-auto"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col p-5">
           {/* Title */}
-          <h3 className="font-semibold text-text-primary dark:text-text-primary-dark mb-2 line-clamp-2 group-hover:text-brand-500 transition-colors">
+          <h3 className="font-semibold text-base text-text-primary dark:text-text-primary-dark mb-3 line-clamp-2 group-hover:text-brand-500 transition-colors leading-relaxed min-h-[3rem]">
             {title}
           </h3>
 
           {/* Meta */}
-          <div className="flex items-center gap-3 text-xs text-text-secondary dark:text-text-secondary-dark mb-4">
-            {timeAgo && (
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                {timeAgo}
-              </span>
-            )}
-            {domain && (
-              <span className="flex items-center gap-1">
-                <Globe className="w-3 h-3" />
-                {domain}
-              </span>
-            )}
-            {resource.password && (
+          {resource.password && (
+            <div className="flex items-center gap-3 text-xs text-text-secondary dark:text-text-secondary-dark mb-3">
               <span className="flex items-center gap-1 text-amber-500">
                 <Shield className="w-3 h-3" />
                 有密码
               </span>
-            )}
-          </div>
-
-          {/* Spacer */}
-          <div className="flex-1" />
+            </div>
+          )}
 
           {/* Actions */}
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-3">
             {shareUrl ? (
               <a
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary flex-1 flex items-center justify-center gap-2 text-sm py-2"
+                className="btn-primary w-full flex items-center justify-center gap-2 text-sm py-2.5"
               >
                 <ExternalLink className="w-4 h-4" />
                 打开资源
@@ -120,27 +107,23 @@ export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) 
               <button
                 onClick={handleGetResource}
                 disabled={loading}
-                className="btn-primary flex-1 flex items-center justify-center gap-2 text-sm py-2 disabled:opacity-50"
+                className="w-full flex items-stretch rounded-lg overflow-hidden disabled:opacity-50 transition-all hover:shadow-lg"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    获取中...
-                  </>
-                ) : (
-                  '获取资源'
-                )}
+                <span className="flex-1 bg-gray-100 dark:bg-gray-800 text-text-secondary dark:text-text-secondary-dark text-xs py-3 px-4 flex items-center">
+                  {timeAgo || '获取网盘资源'}
+                </span>
+                <span className="bg-brand-500 text-white text-sm font-medium py-3 px-6 flex items-center gap-2">
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      获取中
+                    </>
+                  ) : (
+                    '获取资源'
+                  )}
+                </span>
               </button>
             )}
-            <a
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary px-3 py-2 text-sm"
-              title="访问原始链接"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </a>
           </div>
 
           {/* Error */}
@@ -155,6 +138,8 @@ export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) 
         open={showCaptcha}
         onClose={() => setShowCaptcha(false)}
         onSuccess={handleCaptchaSuccess}
+        resourceTitle={resourceTitle}
+        shareUrl={shareUrl}
       />
     </>
   );

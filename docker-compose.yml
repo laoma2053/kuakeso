@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       TZ: Asia/Shanghai                          # 容器时区
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kuakeso"]
       interval: 10s
@@ -32,7 +32,7 @@ services:
     environment:
       TZ: Asia/Shanghai                          # 容器时区
     volumes:
-      - redis_data:/data
+      - ./data/redis:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -87,10 +87,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-
-volumes:
-  postgres_data:                                 # PostgreSQL 数据持久化
-  redis_data:                                    # Redis 数据持久化
 
 networks:
   pansou-net:

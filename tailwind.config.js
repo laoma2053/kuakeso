@@ -10,16 +10,16 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#F0EFFF',
-          100: '#E0DFFE',
-          200: '#C2BFFD',
-          300: '#A39EFC',
-          400: '#857EFB',
-          500: '#6C5CE7',
-          600: '#5B4ED4',
-          700: '#4A3FB3',
-          800: '#3A3192',
-          900: '#2A2371',
+          50: '#E6F0FF',
+          100: '#CCE0FF',
+          200: '#99C2FF',
+          300: '#66A3FF',
+          400: '#3385FF',
+          500: '#0551FF',
+          600: '#0441CC',
+          700: '#033199',
+          800: '#022066',
+          900: '#011033',
         },
         accent: {
           50: '#E0FFFE',
@@ -64,9 +64,9 @@ module.exports = {
       },
       boxShadow: {
         'card': '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
-        'card-hover': '0 10px 40px rgba(108,92,231,0.08), 0 2px 8px rgba(0,0,0,0.06)',
-        'search': '0 4px 24px rgba(108,92,231,0.12)',
-        'glow': '0 0 20px rgba(108,92,231,0.15)',
+        'card-hover': '0 10px 40px rgba(5,81,255,0.08), 0 2px 8px rgba(0,0,0,0.06)',
+        'search': '0 4px 24px rgba(5,81,255,0.12)',
+        'glow': '0 0 20px rgba(5,81,255,0.15)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',

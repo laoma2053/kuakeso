@@ -1,10 +1,9 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
-import { Loader2, Sun, Moon } from 'lucide-react';
+import { useState, useEffect, Suspense, useMemo } from 'react';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { Footer } from '@/components/footer';
 import { ResourceCard, type ResourceItem } from '@/components/resource-card';
@@ -12,9 +11,9 @@ import { ResourceCard, type ResourceItem } from '@/components/resource-card';
 function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
   const query = searchParams.get('q') || '';
   const page = parseInt(searchParams.get('page') || '1', 10);
+  const logoSrc = useMemo(() => Math.random() > 0.5 ? '/pic/logo_zh.png' : '/pic/logo_en.png', []);
 
   const [results, setResults] = useState<ResourceItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -74,15 +73,15 @@ function SearchResultsContent() {
   const totalPages = Math.ceil(total / 20);
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg-primary dark:bg-bg-primary-dark">
+    <div className="min-h-screen flex flex-col bg-bg-primary">
 
       {/* Sticky Header：Logo + 搜索框 + 导航 */}
-      <div className="sticky top-0 z-50 bg-bg-primary dark:bg-bg-primary-dark border-b border-border dark:border-border-dark">
+      <div className="sticky top-0 z-50 bg-white border-b border-border shadow-sm backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-3 sm:gap-6">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <img src="/pic/logo.png" alt="夸克搜" className="h-7 sm:h-9 w-auto object-contain" />
+            <img src={logoSrc} alt="夸克搜" className="h-7 sm:h-9 w-auto object-contain" />
           </Link>
 
           {/* 搜索框 */}
@@ -93,10 +92,10 @@ function SearchResultsContent() {
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="输入关键词搜索资源..."
               className="w-full px-4 sm:px-5 py-2.5 sm:py-3.5
-                         bg-white dark:bg-gray-800
-                         border border-gray-200 dark:border-gray-700
+                         bg-white
+                         border border-gray-200
                          rounded-full
-                         text-gray-800 dark:text-gray-100 text-sm sm:text-base
+                         text-gray-800 text-sm sm:text-base
                          placeholder:text-gray-400
                          shadow-[0_0_8px_rgba(32,33,36,0.08)]
                          transition-shadow duration-300 ease-out
@@ -111,17 +110,9 @@ function SearchResultsContent() {
 
           {/* 导航 */}
           <nav className="flex items-center gap-4 flex-shrink-0">
-            <Link href="/" className="text-sm text-text-secondary hover:text-text-primary dark:text-text-secondary-dark dark:hover:text-text-primary-dark transition-colors">
+            <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
               首页
             </Link>
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="切换主题"
-            >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute top-2 left-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </button>
           </nav>
 
         </div>
@@ -131,9 +122,9 @@ function SearchResultsContent() {
       <main className="flex-1 max-w-6xl mx-auto px-4 py-6 w-full">
         {/* Stats */}
         {!loading && query && (
-          <p className="text-sm text-text-secondary dark:text-text-secondary-dark mb-4">
+          <p className="text-sm text-text-secondary mb-4">
             搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
-            {total > 0 && <>，找到 <span className="font-medium text-text-primary dark:text-text-primary-dark">{total}</span> 个资源</>}
+            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个资源</>}
           </p>
         )}
 
@@ -167,10 +158,10 @@ function SearchResultsContent() {
         {!loading && !error && query && results.length === 0 && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🔍</div>
-            <p className="text-text-secondary dark:text-text-secondary-dark text-lg mb-2">
+            <p className="text-text-secondary text-lg mb-2">
               没有找到相关资源
             </p>
-            <p className="text-text-secondary dark:text-text-secondary-dark text-sm">
+            <p className="text-text-secondary text-sm">
               试试其他关键词
             </p>
           </div>
@@ -195,7 +186,7 @@ function SearchResultsContent() {
                 >
                   上一页
                 </button>
-                <span className="text-sm text-text-secondary dark:text-text-secondary-dark px-3">
+                <span className="text-sm text-text-secondary px-3">
                   {page} / {totalPages}
                 </span>
                 <button
@@ -219,7 +210,7 @@ function SearchResultsContent() {
 export default function SearchPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-bg-primary dark:bg-bg-primary-dark">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary">
         <Loader2 className="w-8 h-8 animate-spin text-brand-500" />
       </div>
     }>

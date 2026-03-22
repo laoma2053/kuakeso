@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export function SearchHero() {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const logoSrc = useMemo(() => Math.random() > 0.5 ? '/pic/logo_zh.png' : '/pic/logo_en.png', []);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -18,16 +19,16 @@ export function SearchHero() {
   const hotSearches = ['速度与激情', '甄嬛传', '三体', 'Office', 'PS教程', '考研资料'];
 
   return (
-    <section className="flex-1 flex flex-col items-center px-4">
+    <section className="flex-1 flex flex-col items-center justify-center px-4 -mt-32">
 
       {/* Logo + 搜索框 + 热门搜索 */}
       <div className="flex flex-col items-center w-full">
 
         {/* Logo */}
-        <div className="mb-5 sm:mb-6">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24">
+        <div className="mb-6">
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48">
             <Image
-              src="/pic/logo.png"
+              src={logoSrc}
               alt="夸克搜"
               fill
               className="object-contain"
@@ -37,13 +38,13 @@ export function SearchHero() {
         </div>
 
         {/* Search Box */}
-        <form onSubmit={handleSearch} className="w-full max-w-2xl mb-3 sm:mb-4">
+        <form onSubmit={handleSearch} className="w-full max-w-2xl mb-4">
           <div className="relative">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="输入关键词搜索资源..."
+              placeholder="搜夸克网盘资源..."
               className="w-full px-5 py-3.5 sm:py-4
                          bg-white
                          border border-gray-200

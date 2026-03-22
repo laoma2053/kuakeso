@@ -464,11 +464,11 @@ Phase 3 — 可选扩展
 4. **数据安全**: Cookie加密存储，后台需认证访问
 5. **搜索合规**: 不主动推荐敏感内容，搜索结果取决于PanSou API返回
 ```
-
 ---
 
 ## 十二、参考开源项目
 
+```
 1. **PanCheck**: https://github.com/Lampon/PanCheck
 2. **quark-auto-save**: https://github.com/Cp0204/quark-auto-save
 3. **quark-save**: https://github.com/henggedaren/quark-save
