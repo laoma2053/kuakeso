@@ -23,6 +23,7 @@ function SearchResultsContent() {
   const [searchInput, setSearchInput] = useState(query);
   const [error, setError] = useState<string | null>(null);
   const [ads, setAds] = useState<Array<{ text: string; url: string }>>([]);
+  const [relatedResources, setRelatedResources] = useState<Array<{ slug: string; title: string }>>([]);
 
   // 当资源验证失效时，从列表中移除
   const handleInvalidResource = (url: string) => {
@@ -37,6 +38,15 @@ function SearchResultsContent() {
       .then((data) => setAds(data.ads || []))
       .catch(() => setAds([]));
   }, []);
+
+  // 获取相关资源
+  useEffect(() => {
+    if (!query) return;
+    fetch(`/api/related?q=${encodeURIComponent(query)}`)
+      .then((res) => res.json())
+      .then((data) => setRelatedResources(data.resources || []))
+      .catch(() => setRelatedResources([]));
+  }, [query]);
 
   useEffect(() => {
     if (!query) return;
@@ -114,7 +124,8 @@ function SearchResultsContent() {
                          focus:outline-none
                          focus:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
                          hover:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
-                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]"
+                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         md:appearance-none md:shadow-sm md:focus:shadow-md md:hover:shadow-md md:active:shadow-md"
             />
           </form>
 
@@ -208,9 +219,9 @@ function SearchResultsContent() {
 
           {/* 侧边栏 - 仅在有结果时显示 */}
           {!loading && results.length > 0 && (
-            <div className="hidden lg:block w-80 flex-shrink-0 border-l border-gray-200 pl-6">
+            <div className="hidden lg:block w-80 flex-shrink-0 border-l border-gray-200 pl-6 md:pl-8">
               <SearchSidebar
-                relatedResources={[]}
+                relatedResources={relatedResources}
                 ads={ads}
               />
             </div>

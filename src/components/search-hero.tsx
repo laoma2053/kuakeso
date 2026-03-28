@@ -58,13 +58,14 @@ export function SearchHero() {
                          focus:outline-none
                          focus:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
                          hover:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
-                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]"
+                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         md:appearance-none md:shadow-sm md:focus:shadow-md md:hover:shadow-md md:active:shadow-md"
             />
           </div>
         </form>
 
         {/* Hot Searches */}
-        <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl px-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 max-w-xl px-2">
           <span className="text-xs text-gray-400 mr-1">热门搜索</span>
           {hotSearches.map((tag) => (
             <Link

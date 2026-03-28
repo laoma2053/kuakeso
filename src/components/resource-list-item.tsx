@@ -80,14 +80,14 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
           href="#"
           onClick={handleTitleClick}
           className={`text-lg font-medium line-clamp-1 hover:underline transition-colors ${
-            shareUrl ? 'text-purple-600 visited:text-purple-600' : 'text-blue-600'
+            shareUrl ? 'text-purple-600 visited:text-purple-600' : 'text-gray-900'
           }`}
         >
-          {highlightKeyword(title, searchQuery)}
+          {shareUrl ? title : highlightKeyword(title, searchQuery)}
         </a>
 
         {/* 元信息 */}
-        <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
           {timeAgo && <span>分享时间：{timeAgo}</span>}
           <span>来源：{sourceLabel}</span>
           {resource.password && <span className="text-amber-600">🔒 有密码</span>}
