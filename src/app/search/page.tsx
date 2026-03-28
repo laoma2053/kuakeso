@@ -87,10 +87,11 @@ function SearchResultsContent() {
           {/* 搜索框 */}
           <form onSubmit={handleSearch} className="w-full max-w-2xl">
             <input
-              type="text"
+              type="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="输入关键词搜索资源..."
+              enterKeyHint="search"
               className="w-full px-4 sm:px-5 py-2.5 sm:py-3.5
                          bg-white
                          border border-gray-200
@@ -104,16 +105,6 @@ function SearchResultsContent() {
                          focus:shadow-[0_0_16px_rgba(32,33,36,0.15)]"
             />
           </form>
-
-          {/* 弹性空白，将导航推到右侧 */}
-          <div className="flex-1" />
-
-          {/* 导航 */}
-          <nav className="flex items-center gap-4 flex-shrink-0">
-            <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
-              首页
-            </Link>
-          </nav>
 
         </div>
       </div>

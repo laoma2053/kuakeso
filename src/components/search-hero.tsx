@@ -26,7 +26,7 @@ export function SearchHero() {
 
         {/* Logo */}
         <div className="mb-8">
-          <div className="relative w-52 h-13 sm:w-64 sm:h-16 lg:w-80 lg:h-20">
+          <div className="relative w-52 h-[52px] sm:w-64 sm:h-16 lg:w-80 lg:h-20">
             <Image
               src={logoSrc}
               alt="夸克点搜"
@@ -41,10 +41,11 @@ export function SearchHero() {
         <form onSubmit={handleSearch} className="w-full max-w-2xl mb-4">
           <div className="relative">
             <input
-              type="text"
+              type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="搜夸克网盘资源..."
+              enterKeyHint="search"
               className="w-full px-5 py-3.5 sm:py-4
                          bg-white
                          border border-gray-200
