@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: ['ioredis', 'bullmq'],
-  },
+  serverExternalPackages: ['ioredis', 'bullmq'],
   async headers() {
     return [
       {

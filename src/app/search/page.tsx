@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Footer } from '@/components/footer';
 import { ResourceCard, type ResourceItem } from '@/components/resource-card';
+import { ResourceListItem } from '@/components/resource-list-item';
+import { SearchSidebar } from '@/components/search-sidebar';
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();
@@ -20,12 +22,21 @@ function SearchResultsContent() {
   const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState(query);
   const [error, setError] = useState<string | null>(null);
+  const [ads, setAds] = useState<Array<{ text: string; url: string }>>([]);
 
   // 当资源验证失效时，从列表中移除
   const handleInvalidResource = (url: string) => {
     setResults((prev) => prev.filter((r) => r.url !== url));
     setTotal((prev) => Math.max(0, prev - 1));
   };
+
+  // 获取广告配置
+  useEffect(() => {
+    fetch('/api/ads')
+      .then((res) => res.json())
+      .then((data) => setAds(data.ads || []))
+      .catch(() => setAds([]));
+  }, []);
 
   useEffect(() => {
     if (!query) return;
@@ -120,78 +131,91 @@ function SearchResultsContent() {
           </p>
         )}
 
-        {/* Loading Skeleton */}
-        {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="card">
-                <div className="skeleton h-5 w-3/4 mb-3" />
-                <div className="skeleton h-3 w-1/2 mb-4" />
-                <div className="skeleton h-9 w-full mt-auto" />
+        {/* 两栏布局：主内容 + 侧边栏 */}
+        <div className="flex gap-6">
+          {/* 主内容区 */}
+          <div className="flex-1 min-w-0">
+            {/* Loading Skeleton */}
+            {loading && (
+              <div className="space-y-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-white border border-gray-200 rounded-lg p-4">
+                    <div className="skeleton h-5 w-3/4 mb-3" />
+                    <div className="skeleton h-3 w-1/2" />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {/* Error */}
-        {error && !loading && (
-          <div className="text-center py-16">
-            <p className="text-red-500 mb-2">{error}</p>
-            <button
-              onClick={() => router.refresh()}
-              className="btn-secondary text-sm"
-            >
-              重试
-            </button>
-          </div>
-        )}
-
-        {/* Empty */}
-        {!loading && !error && query && results.length === 0 && (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-text-secondary text-lg mb-2">
-              没有找到相关资源
-            </p>
-            <p className="text-text-secondary text-sm">
-              试试其他关键词
-            </p>
-          </div>
-        )}
-
-        {/* Results Grid */}
-        {!loading && results.length > 0 && (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {results.map((resource, index) => (
-                <ResourceCard key={`${resource.url}-${index}`} resource={resource} index={index} onInvalid={handleInvalidResource} />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <button
-                  onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page - 1}`)}
-                  disabled={page <= 1}
-                  className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
-                >
-                  上一页
-                </button>
-                <span className="text-sm text-text-secondary px-3">
-                  {page} / {totalPages}
-                </span>
-                <button
-                  onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page + 1}`)}
-                  disabled={page >= totalPages}
-                  className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
-                >
-                  下一页
+            {/* Error */}
+            {error && !loading && (
+              <div className="text-center py-16">
+                <p className="text-red-500 mb-2">{error}</p>
+                <button onClick={() => router.refresh()} className="btn-secondary text-sm">
+                  重试
                 </button>
               </div>
             )}
-          </>
-        )}
+
+            {/* Empty */}
+            {!loading && !error && query && results.length === 0 && (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">🔍</div>
+                <p className="text-text-secondary text-lg mb-2">没有找到相关资源</p>
+                <p className="text-text-secondary text-sm">试试其他关键词</p>
+              </div>
+            )}
+
+            {/* Results List */}
+            {!loading && results.length > 0 && (
+              <>
+                <div className="space-y-4">
+                  {results.map((resource, index) => (
+                    <ResourceListItem
+                      key={`${resource.url}-${index}`}
+                      resource={resource}
+                      searchQuery={query}
+                      onInvalid={handleInvalidResource}
+                    />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-8">
+                    <button
+                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page - 1}`)}
+                      disabled={page <= 1}
+                      className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
+                    >
+                      上一页
+                    </button>
+                    <span className="text-sm text-text-secondary px-3">
+                      {page} / {totalPages}
+                    </span>
+                    <button
+                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page + 1}`)}
+                      disabled={page >= totalPages}
+                      className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
+                    >
+                      下一页
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* 侧边栏 - 仅在有结果时显示 */}
+          {!loading && results.length > 0 && (
+            <div className="hidden lg:block w-80 flex-shrink-0 border-l border-gray-200 pl-6">
+              <SearchSidebar
+                relatedResources={[]}
+                ads={ads}
+              />
+            </div>
+          )}
+        </div>
       </main>
 
       <Footer />

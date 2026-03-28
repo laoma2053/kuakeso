@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Shield, Users, Database, Search, Plus, Trash2,
-  RefreshCw, LogOut, Eye, EyeOff, Activity,
+  RefreshCw, LogOut, Eye, EyeOff, Activity, Megaphone,
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface Account {
   id: number;
@@ -126,16 +127,25 @@ export default function AdminPage() {
 
   const handleDeleteAccount = async (id: number, name: string) => {
     if (!confirm(`确定删除账号「${name}」吗？`)) return;
+    setLoading(true);
     try {
       const res = await fetch(`/api/admin/accounts?id=${id}`, {
         method: 'DELETE',
         headers: headers(),
       });
       if (res.ok) {
+        alert('删除成功');
         fetchAccounts();
         fetchStats();
+      } else {
+        const data = await res.json();
+        alert('删除失败：' + (data.error || '未知错误'));
       }
-    } catch {}
+    } catch (err) {
+      alert('删除失败：网络错误');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -195,9 +205,20 @@ export default function AdminPage() {
       {/* Top Bar */}
       <div className="bg-bg-primary dark:bg-bg-primary-dark border-b border-border dark:border-border-dark">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-brand-500" />
-            <span className="font-semibold text-text-primary dark:text-text-primary-dark">夸克搜 · 管理后台</span>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-brand-500" />
+              <span className="font-semibold text-text-primary dark:text-text-primary-dark">夸克点搜 · 管理后台</span>
+            </div>
+            <nav className="flex items-center gap-4">
+              <Link href="/admin" className="text-sm text-brand-500 hover:text-brand-600 transition-colors">
+                账号管理
+              </Link>
+              <Link href="/admin/ads" className="text-sm text-text-secondary hover:text-brand-500 transition-colors flex items-center gap-1">
+                <Megaphone className="w-4 h-4" />
+                广告管理
+              </Link>
+            </nav>
           </div>
           <button onClick={handleLogout} className="flex items-center gap-1 text-sm text-text-secondary hover:text-red-500 transition-colors">
             <LogOut className="w-4 h-4" />
