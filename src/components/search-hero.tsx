@@ -25,8 +25,8 @@ export function SearchHero() {
       <div className="flex flex-col items-center w-full">
 
         {/* Logo */}
-        <div className="mb-7">
-          <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48">
+        <div className="mb-8">
+          <div className="relative w-52 h-13 sm:w-64 sm:h-16 lg:w-80 lg:h-20">
             <Image
               src={logoSrc}
               alt="夸克点搜"

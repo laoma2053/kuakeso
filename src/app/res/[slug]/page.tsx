@@ -9,7 +9,7 @@ import { ResourceDetail } from '@/components/resource-detail';
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getResource(slug: string) {
@@ -20,7 +20,8 @@ async function getResource(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resource = await getResource(params.slug);
+  const { slug } = await params;
+  const resource = await getResource(slug);
 
   if (!resource) {
     return { title: '资源不存在 - 夸克点搜' };
@@ -45,7 +46,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ResourcePage({ params }: PageProps) {
-  const resource = await getResource(params.slug);
+  const { slug } = await params;
+  const resource = await getResource(slug);
 
   if (!resource) {
     notFound();
