@@ -81,7 +81,7 @@ function SearchResultsContent() {
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <img src={logoSrc} alt="夸克搜" className="h-7 sm:h-9 w-auto object-contain" />
+            <img src={logoSrc} alt="夸克点搜" className="h-7 sm:h-9 w-auto object-contain" />
           </Link>
 
           {/* 搜索框 */}

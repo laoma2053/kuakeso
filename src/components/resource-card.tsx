@@ -109,10 +109,10 @@ export function ResourceCard({ resource, index, onInvalid }: ResourceCardProps) 
                 disabled={loading}
                 className="w-full flex items-stretch rounded-lg overflow-hidden disabled:opacity-50 transition-all hover:shadow-lg"
               >
-                <span className="flex-1 bg-gray-100 dark:bg-gray-800 text-text-secondary dark:text-text-secondary-dark text-xs py-3 px-4 flex items-center">
-                  {timeAgo || '获取网盘资源'}
+                <span className="flex-1 bg-gray-100 dark:bg-gray-800 text-text-secondary dark:text-text-secondary-dark text-xs py-2.5 px-4 flex items-center">
+                  {timeAgo ? `分享日期：${timeAgo}` : '获取网盘资源'}
                 </span>
-                <span className="bg-brand-500 text-white text-sm font-medium py-3 px-6 flex items-center gap-2">
+                <span className="bg-brand-500 text-white text-sm font-medium py-2.5 px-6 flex items-center gap-2">
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />

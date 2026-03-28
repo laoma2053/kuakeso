@@ -448,7 +448,7 @@ Phase 1 — MVP (2-3周)
 
 Phase 2 — 增强 (2周)
   Week 4: SEO优化、定期清理、数据统计仪表盘、账号健康检查
-  Week 5: 搜索体验优化(热词/联想)、暗色模式、性能调优、缓存预热
+  Week 5: 搜索体验优化(热词/联想)、性能调优、缓存预热
 
 Phase 3 — 可选扩展
   百度/UC/迅雷网盘接入（视夸克站点运行情况决定）
@@ -473,4 +473,5 @@ Phase 3 — 可选扩展
 2. **quark-auto-save**: https://github.com/Cp0204/quark-auto-save
 3. **quark-save**: https://github.com/henggedaren/quark-save
 4. **pansou**: https://github.com/fish2018/pansou
+5. **xinyue-search**: https://github.com/675061370/xinyue-search
 5. **搜索合规**: 不主动推荐敏感内容，搜索结果取决于PanSou API返回

@@ -16,14 +16,14 @@ export function Footer() {
               免责声明
             </Link>
             <span className="text-border dark:text-border-dark">|</span>
-            <a href="mailto:admin@example.com" className="hover:text-brand-500 transition-colors">
-              联系我们
-            </a>
+            <Link href="/links" className="hover:text-brand-500 transition-colors">
+              友情链接
+            </Link>
           </div>
 
           {/* 右：版权 */}
           <div className="text-xs text-text-secondary dark:text-text-secondary-dark md:text-right">
-            <p>本站不存储任何资源 · © {new Date().getFullYear()} 夸克搜</p>
+            <p>本站不存储任何资源 · © {new Date().getFullYear()} 夸克点搜</p>
           </div>
 
         </div>

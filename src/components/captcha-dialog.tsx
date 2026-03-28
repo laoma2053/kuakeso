@@ -126,7 +126,6 @@ export function CaptchaDialog({ open, onClose, onSuccess, resourceTitle, shareUr
                     <span className="text-2xl font-mono font-bold text-text-primary dark:text-text-primary-dark">
                       {captcha?.question || '加载中...'}
                     </span>
-                    <span className="text-2xl font-mono font-bold text-text-primary dark:text-text-primary-dark"> = ?</span>
                   </div>
                   <button
                     type="button"
@@ -196,7 +195,7 @@ export function CaptchaDialog({ open, onClose, onSuccess, resourceTitle, shareUr
                 <div className="hidden md:flex justify-center mb-4">
                   <div className="bg-white p-4 rounded-lg">
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`}
+                      src={`https://api.2dcode.biz/v1/create-qr-code?data=${encodeURIComponent(shareUrl)}&size=200x200`}
                       alt="扫码获取资源"
                       className="w-48 h-48"
                     />
