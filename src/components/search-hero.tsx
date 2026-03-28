@@ -19,13 +19,13 @@ export function SearchHero() {
   const hotSearches = ['速度与激情', '甄嬛传', '三体', 'Office', 'PS教程', '考研资料'];
 
   return (
-    <section className="flex-1 flex flex-col items-center justify-center px-4">
+    <section className="flex-1 flex flex-col items-center px-4 pt-[20vh]">
 
       {/* Logo + 搜索框 + 热门搜索 */}
       <div className="flex flex-col items-center w-full">
 
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-7">
           <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48">
             <Image
               src={logoSrc}
@@ -38,7 +38,7 @@ export function SearchHero() {
         </div>
 
         {/* Search Box */}
-        <form onSubmit={handleSearch} className="w-full max-w-2xl mb-3">
+        <form onSubmit={handleSearch} className="w-full max-w-2xl mb-4">
           <div className="relative">
             <input
               type="text"
