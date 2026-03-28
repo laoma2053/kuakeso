@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function SearchHero() {
   const [query, setQuery] = useState('');
@@ -52,11 +53,12 @@ export function SearchHero() {
                          rounded-full
                          text-gray-800 text-base sm:text-lg
                          placeholder:text-gray-400
-                         shadow-[0_0_8px_rgba(32,33,36,0.08)]
-                         transition-shadow duration-300 ease-out
+                         shadow-[0_1px_6px_rgba(32,33,36,0.08)]
+                         transition-shadow duration-200
                          focus:outline-none
-                         hover:shadow-[0_0_16px_rgba(32,33,36,0.15)]
-                         focus:shadow-[0_0_16px_rgba(32,33,36,0.15)]"
+                         focus:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         hover:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]"
             />
           </div>
         </form>
@@ -65,19 +67,18 @@ export function SearchHero() {
         <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl px-2">
           <span className="text-xs text-gray-400 mr-1">热门搜索</span>
           {hotSearches.map((tag) => (
-            <button
+            <Link
               key={tag}
-              onClick={() => {
-                setQuery(tag);
-                router.push(`/search?q=${encodeURIComponent(tag)}`);
-              }}
+              href={`/search?q=${encodeURIComponent(tag)}`}
+              prefetch={true}
               className="px-3 py-1 text-xs rounded-full
-                         bg-gray-50 text-gray-600
-                         hover:bg-gray-100
-                         transition-colors cursor-pointer"
+                         bg-gray-100 text-gray-700
+                         hover:bg-gray-200
+                         active:bg-gray-200
+                         transition-colors cursor-pointer inline-block"
             >
               {tag}
-            </button>
+            </Link>
           ))}
         </div>
 

@@ -98,11 +98,12 @@ function SearchResultsContent() {
                          rounded-full
                          text-gray-800 text-sm sm:text-base
                          placeholder:text-gray-400
-                         shadow-[0_0_8px_rgba(32,33,36,0.08)]
-                         transition-shadow duration-300 ease-out
+                         shadow-[0_1px_6px_rgba(32,33,36,0.08)]
+                         transition-shadow duration-200
                          focus:outline-none
-                         hover:shadow-[0_0_16px_rgba(32,33,36,0.15)]
-                         focus:shadow-[0_0_16px_rgba(32,33,36,0.15)]"
+                         focus:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         hover:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
+                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]"
             />
           </form>
 

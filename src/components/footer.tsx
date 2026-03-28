@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
 
           {/* 左：导航链接 */}
-          <div className="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary-dark">
+          <div className="flex items-center gap-6 text-xs text-text-secondary dark:text-text-secondary-dark">
             <Link href="/about" className="hover:text-brand-500 transition-colors">
               关于我们
             </Link>
