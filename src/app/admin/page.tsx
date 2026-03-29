@@ -162,7 +162,7 @@ export default function AdminPage() {
       <div className="min-h-screen flex items-center justify-center bg-bg-primary dark:bg-bg-primary-dark px-4">
         <div className="card max-w-sm w-full p-8">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-accent-500 mb-4">
               <Shield className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-xl font-bold text-text-primary dark:text-text-primary-dark">管理后台</h1>

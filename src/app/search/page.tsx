@@ -115,10 +115,10 @@ function SearchResultsContent() {
               enterKeyHint="search"
               className="w-full px-4 sm:px-5 py-2.5 sm:py-3.5
                          bg-white
-                         border border-gray-200
+                         border border-border
                          rounded-full
-                         text-gray-800 text-sm sm:text-base
-                         placeholder:text-gray-400
+                         text-text-primary text-sm sm:text-base
+                         placeholder:text-text-tertiary
                          shadow-[0_1px_6px_rgba(32,33,36,0.08)]
                          transition-shadow duration-200
                          focus:outline-none
@@ -150,7 +150,7 @@ function SearchResultsContent() {
             {loading && (
               <div className="space-y-4">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div key={i} className="bg-white border border-border rounded-lg p-4">
                     <div className="skeleton h-5 w-3/4 mb-3" />
                     <div className="skeleton h-3 w-1/2" />
                   </div>
@@ -219,7 +219,7 @@ function SearchResultsContent() {
 
           {/* 侧边栏 - 仅在有结果时显示 */}
           {!loading && results.length > 0 && (
-            <div className="hidden lg:block w-80 flex-shrink-0 border-l border-gray-200 pl-6 md:pl-8">
+            <div className="hidden lg:block w-80 flex-shrink-0 border-l border-border pl-6 md:pl-8">
               <SearchSidebar
                 relatedResources={relatedResources}
                 ads={ads}

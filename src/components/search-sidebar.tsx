@@ -18,7 +18,7 @@ export function SearchSidebar({ relatedResources = [], ads = [] }: SearchSidebar
       {/* 相关资源 */}
       {relatedResources.length > 0 && (
         <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">相关资源</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-3">相关资源</h3>
           <div className="space-y-2">
             {relatedResources.slice(0, 5).map((item) => (
               <Link
@@ -35,7 +35,7 @@ export function SearchSidebar({ relatedResources = [], ads = [] }: SearchSidebar
 
       {/* 广告位 */}
       {ads.length > 0 && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="bg-surface-secondary border border-border rounded-lg p-4">
           <div className="space-y-3">
             {ads.map((ad, index) => (
               <a
@@ -43,7 +43,7 @@ export function SearchSidebar({ relatedResources = [], ads = [] }: SearchSidebar
                 href={ad.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-sm text-gray-700 hover:text-blue-600 transition-colors"
+                className="block text-sm text-text-primary hover:text-brand-500 transition-colors"
               >
                 {ad.text}
               </a>

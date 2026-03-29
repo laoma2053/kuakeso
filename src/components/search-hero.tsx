@@ -51,8 +51,8 @@ export function SearchHero() {
                          bg-white
                          border border-gray-200
                          rounded-full
-                         text-gray-800 text-base sm:text-lg
-                         placeholder:text-gray-400
+                         text-text-primary text-base sm:text-lg
+                         placeholder:text-text-tertiary
                          shadow-[0_1px_6px_rgba(32,33,36,0.08)]
                          transition-shadow duration-200
                          focus:outline-none
@@ -66,16 +66,16 @@ export function SearchHero() {
 
         {/* Hot Searches */}
         <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 max-w-xl px-2">
-          <span className="text-xs text-gray-400 mr-1">热门搜索</span>
+          <span className="text-xs text-text-tertiary mr-1">热门搜索</span>
           {hotSearches.map((tag) => (
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
               prefetch={true}
               className="px-3 py-1 text-xs rounded-full
-                         bg-gray-100 text-gray-700
-                         hover:bg-gray-200
-                         active:bg-gray-200
+                         bg-surface-secondary text-text-primary
+                         hover:bg-surface-hover
+                         active:bg-surface-hover
                          transition-colors cursor-pointer inline-block"
             >
               {tag}
