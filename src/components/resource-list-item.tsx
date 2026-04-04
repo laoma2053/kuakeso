@@ -142,7 +142,7 @@ function formatRelativeTime(datetime: string): string {
     if (hours < 24) return `${hours}小时前`;
     if (days < 30) return `${days}天前`;
     if (days < 365) return `${Math.floor(days / 30)}个月前`;
-    if (days >= 365) return '1年前';
+    return '1年前';
   } catch {
     return datetime;
   }
