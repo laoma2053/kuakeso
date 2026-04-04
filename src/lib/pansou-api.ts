@@ -57,19 +57,19 @@ export class PanSouAPI {
 
       const data = await response.json();
 
-      // 提取夸克网盘结果
-      const quarkResults: PanSouResult[] = data?.data?.merged_by_type?.quark || [];
+      // 动态提取对应平台结果
+      const platformKey = (options?.cloudTypes?.[0] || 'quark');
+      const platformResults: PanSouResult[] = data?.data?.merged_by_type?.[platformKey] || [];
 
-      // 按datetime倒序排序（更新越近越靠前）
-      quarkResults.sort((a, b) => {
+      platformResults.sort((a, b) => {
         const dateA = new Date(a.datetime || 0).getTime();
         const dateB = new Date(b.datetime || 0).getTime();
         return dateB - dateA;
       });
 
       return {
-        total: quarkResults.length,
-        results: quarkResults,
+        total: platformResults.length,
+        results: platformResults,
       };
     } catch (error) {
       console.error('❌ [搜索API] PanSou搜索请求失败:', error);

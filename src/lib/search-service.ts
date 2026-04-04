@@ -63,7 +63,7 @@ function mapResults(results: PanSouResult[]): SearchResultItem[] {
  * 核心搜索函数
  * 实现请求合并 + 缓存 + 有效性检测 + 限流
  */
-export async function searchResources(keyword: string, page: number = 1, ip?: string): Promise<{
+export async function searchResources(keyword: string, page: number = 1, ip?: string, platform: string = 'quark'): Promise<{
   results: SearchResultItem[];
   total: number;
   cached: boolean;
@@ -81,8 +81,8 @@ export async function searchResources(keyword: string, page: number = 1, ip?: st
     return { results: [], total: 0, cached: false };
   }
 
-  const cacheKey = `${CACHE_PREFIX}${normalizedKeyword}`;
-  const lockKey = `${LOCK_PREFIX}${normalizedKeyword}`;
+  const cacheKey = `${CACHE_PREFIX}${platform}:${normalizedKeyword}`;
+  const lockKey = `${LOCK_PREFIX}${platform}:${normalizedKeyword}`;
 
   // 1. 查缓存
   const cached = await redis.get(cacheKey);
@@ -114,7 +114,7 @@ export async function searchResources(keyword: string, page: number = 1, ip?: st
   try {
     // 3. 调用PanSou API
     const pansou = createPanSouClient();
-    const searchResult = await pansou.search(normalizedKeyword);
+    const searchResult = await pansou.search(normalizedKeyword, { cloudTypes: [platform] });
 
     if (searchResult.results.length === 0) {
       // 空结果也缓存，但TTL短一些（2分钟）

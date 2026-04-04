@@ -186,3 +186,20 @@ docker compose exec web npx prisma db push
    - 使用 `generateMetadata` 生成动态 meta 标签
    - Sitemap：`/sitemap.xml`
    - Robots：`/robots.txt`
+
+7. **色值规范（强制）**：
+   - 所有颜色必须使用 `tailwind.config.js` 中定义的语义化 token，禁止使用 Tailwind 内置色（如 `gray-200`、`purple-600`、`blue-500` 等）
+   - 常用 token 对照：
+
+   | 用途 | Token |
+   |------|-------|
+   | 品牌主色（蓝） | `brand-500` / `brand-600` |
+   | 强调色（紫，已转存等特殊状态） | `accent-500` / `accent-600` |
+   | 页面背景 | `surface` |
+   | 卡片背景 | `surface-card` |
+   | 次级背景 | `surface-secondary` |
+   | 悬停背景 | `surface-hover` |
+   | 主要文字 | `text-primary` |
+   | 次要文字 | `text-secondary` |
+   | 辅助文字 | `text-tertiary` |
+   | 默认边框 | `border` |

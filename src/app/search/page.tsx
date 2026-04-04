@@ -6,15 +6,23 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Footer } from '@/components/footer';
-import { ResourceCard, type ResourceItem } from '@/components/resource-card';
+import { type ResourceItem } from '@/components/resource-card';
 import { ResourceListItem } from '@/components/resource-list-item';
 import { SearchSidebar } from '@/components/search-sidebar';
+
+const PLATFORM_LABELS: Record<string, string> = {
+  quark: '夸克网盘',
+  baidu: '百度网盘',
+  xunlei: '迅雷网盘',
+  uc: 'UC网盘',
+};
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q') || '';
   const page = parseInt(searchParams.get('page') || '1', 10);
+  const platform = searchParams.get('platform') || 'quark';
   const logoSrc = useMemo(() => Math.random() > 0.5 ? '/pic/logo_zh.png' : '/pic/logo_en.png', []);
 
   const [results, setResults] = useState<ResourceItem[]>([]);
@@ -24,6 +32,15 @@ function SearchResultsContent() {
   const [error, setError] = useState<string | null>(null);
   const [ads, setAds] = useState<Array<{ text: string; url: string }>>([]);
   const [relatedResources, setRelatedResources] = useState<Array<{ slug: string; title: string }>>([]);
+  const [platforms, setPlatforms] = useState<string[]>(['quark']);
+
+  // 获取已配置平台列表
+  useEffect(() => {
+    fetch('/api/platforms')
+      .then((r) => r.json())
+      .then((d) => { if (d.platforms?.length) setPlatforms(d.platforms); })
+      .catch(() => {});
+  }, []);
 
   // 当资源验证失效时，从列表中移除
   const handleInvalidResource = (url: string) => {
@@ -59,7 +76,7 @@ function SearchResultsContent() {
         const res = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, page }),
+          body: JSON.stringify({ query, page, platform }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || '搜索失败');
@@ -88,7 +105,7 @@ function SearchResultsContent() {
     e.preventDefault();
     const trimmed = searchInput.trim();
     if (!trimmed) return;
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    router.push(`/search?q=${encodeURIComponent(trimmed)}&platform=${platform}`);
   };
 
   const totalPages = Math.ceil(total / 20);
@@ -136,10 +153,29 @@ function SearchResultsContent() {
       <main className="flex-1 max-w-6xl mx-auto px-4 py-6 w-full">
         {/* Stats */}
         {!loading && query && (
-          <p className="text-sm text-text-secondary mb-4">
+          <p className="text-sm text-text-secondary mb-3">
             搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
-            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个资源</>}
+            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个 <span className="text-brand-500 font-medium">{PLATFORM_LABELS[platform] ?? platform}</span> 资源</>}
           </p>
+        )}
+
+        {/* 平台 Tab 栏 - 多平台时显示 */}
+        {platforms.length > 1 && (
+          <div className="flex items-center gap-1 border-b border-border mb-4">
+            {platforms.map((p) => (
+              <button
+                key={p}
+                onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&platform=${p}`)}
+                className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                  platform === p
+                    ? 'border-brand-500 text-brand-500'
+                    : 'border-transparent text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                {PLATFORM_LABELS[p] ?? p}
+              </button>
+            ))}
+          </div>
         )}
 
         {/* 两栏布局：主内容 + 侧边栏 */}
@@ -180,7 +216,7 @@ function SearchResultsContent() {
             {/* Results List */}
             {!loading && results.length > 0 && (
               <>
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {results.map((resource, index) => (
                     <ResourceListItem
                       key={`${resource.url}-${index}`}
@@ -195,7 +231,7 @@ function SearchResultsContent() {
                 {totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 mt-8">
                     <button
-                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page - 1}`)}
+                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&platform=${platform}&page=${page - 1}`)}
                       disabled={page <= 1}
                       className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
                     >
@@ -205,7 +241,7 @@ function SearchResultsContent() {
                       {page} / {totalPages}
                     </span>
                     <button
-                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&page=${page + 1}`)}
+                      onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&platform=${platform}&page=${page + 1}`)}
                       disabled={page >= totalPages}
                       className="btn-secondary px-4 py-2 text-sm disabled:opacity-50"
                     >

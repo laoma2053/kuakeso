@@ -74,23 +74,24 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div className="border border-border rounded-lg p-3 hover:border-brand-200 transition-colors">
         {/* 标题 */}
         <a
           href="#"
           onClick={handleTitleClick}
-          className={`text-lg font-medium line-clamp-1 hover:underline transition-colors ${
-            shareUrl ? 'text-purple-600 visited:text-purple-600' : 'text-text-primary'
+          className={`text-base font-medium line-clamp-1 hover:underline transition-colors ${
+            shareUrl ? 'text-accent-500' : 'text-text-primary'
           }`}
         >
           {shareUrl ? title : highlightKeyword(title, searchQuery)}
         </a>
 
         {/* 元信息 */}
-        <div className="flex items-center gap-4 mt-2 text-sm text-text-secondary">
-          {timeAgo && <span>分享时间：{timeAgo}</span>}
-          <span>来源：{sourceLabel}</span>
-          {resource.password && <span className="text-amber-600">🔒 有密码</span>}
+        <div className="flex items-center gap-2 mt-1.5 text-xs text-text-tertiary">
+          {timeAgo && <span>{timeAgo}</span>}
+          {timeAgo && <span>·</span>}
+          <span>{sourceLabel}</span>
+          {resource.password && <><span>·</span><span className="text-amber-500">有密码</span></>}
         </div>
 
         {/* 错误提示 */}
@@ -141,7 +142,7 @@ function formatRelativeTime(datetime: string): string {
     if (hours < 24) return `${hours}小时前`;
     if (days < 30) return `${days}天前`;
     if (days < 365) return `${Math.floor(days / 30)}个月前`;
-    return `${Math.floor(days / 365)}年前`;
+    if (days >= 365) return '1年前';
   } catch {
     return datetime;
   }

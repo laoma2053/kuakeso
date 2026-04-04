@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { query, page = 1 } = body;
+    const { query, page = 1, platform = 'quark' } = body;
 
     if (!query || typeof query !== 'string') {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const ip = forwarded?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || '127.0.0.1';
     const userAgent = req.headers.get('user-agent') || '';
 
-    const result = await searchResources(trimmed, page, ip);
+    const result = await searchResources(trimmed, page, ip, platform);
 
     // Record search log asynchronously (don't block response)
     prisma.searchLog.create({
