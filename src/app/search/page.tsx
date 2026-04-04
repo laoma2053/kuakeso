@@ -134,7 +134,7 @@ function SearchResultsContent() {
                          bg-white
                          border border-border
                          rounded-full
-                         text-text-primary text-sm sm:text-base
+                         text-text-primary text-[16px] sm:text-base
                          placeholder:text-text-tertiary
                          shadow-[0_1px_6px_rgba(32,33,36,0.08)]
                          transition-shadow duration-200
@@ -155,7 +155,7 @@ function SearchResultsContent() {
         {!loading && query && (
           <p className="text-sm text-text-secondary mb-3">
             搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
-            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个 <span className="text-brand-500 font-medium">{PLATFORM_LABELS[platform] ?? platform}</span> 资源</>}
+            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个{PLATFORM_LABELS[platform] ?? platform}资源</>}
           </p>
         )}
 

@@ -74,12 +74,12 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
   return (
     <>
-      <div className="border border-border rounded-lg p-3 hover:border-brand-200 transition-colors">
+      <div className="border border-border rounded-lg p-3 hover:ring-1 hover:ring-border transition-all">
         {/* 标题 */}
         <a
           href="#"
           onClick={handleTitleClick}
-          className={`text-base font-medium line-clamp-1 hover:underline transition-colors ${
+          className={`text-lg font-medium line-clamp-1 hover:underline transition-colors ${
             shareUrl ? 'text-accent-500' : 'text-text-primary'
           }`}
         >
@@ -99,7 +99,7 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
         {/* 加载状态 */}
         {loading && (
-          <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mt-2 text-sm text-text-secondary">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>获取中...</span>
           </div>
@@ -163,7 +163,7 @@ function highlightKeyword(text: string, keyword?: string) {
 
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <span key={i} className="text-blue-600">{part}</span>
+      <span key={i} className="text-brand-500">{part}</span>
     ) : (
       part
     )

@@ -42,7 +42,7 @@ module.exports = {
         // 背景色（高级灰系统）
         surface: {
           DEFAULT: '#F7F7F8',      // 主背景（高级浅灰）
-          card: '#FFFFFF',         // 卡片背景（纯白）
+          card: '#F7F7F8',         // 卡片背景（与主背景一致）
           secondary: '#EFEFEF',    // 次级背景（中浅灰）
           hover: '#F5F5F5',        // 悬停背景
           dark: '#0E0E0E',         // 暗色主背景（深灰黑）

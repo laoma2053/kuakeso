@@ -17,14 +17,16 @@ export function SearchSidebar({ relatedResources = [], ads = [] }: SearchSidebar
     <aside className="space-y-6 sticky top-20">
       {/* 相关资源 */}
       {relatedResources.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        <div className="bg-surface-card border border-border rounded-lg p-4">
           <h3 className="text-sm font-semibold text-text-primary mb-3">相关资源</h3>
           <div className="space-y-2">
             {relatedResources.slice(0, 5).map((item) => (
               <Link
                 key={item.slug}
                 href={`/res/${item.slug}`}
-                className="block text-sm text-blue-600 hover:underline line-clamp-2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm text-text-primary hover:underline line-clamp-2"
               >
                 {item.title}
               </Link>
