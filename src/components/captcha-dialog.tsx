@@ -47,11 +47,15 @@ export function CaptchaDialog({ open, onClose, onSuccess, resourceTitle, shareUr
 
   useEffect(() => {
     if (open) {
-      setVerified(false);
-      fetchCaptcha();
-      setTimeout(() => inputRef.current?.focus(), 100);
+      if (shareUrl) {
+        setVerified(true);
+      } else {
+        setVerified(false);
+        fetchCaptcha();
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
     }
-  }, [open, fetchCaptcha]);
+  }, [open, fetchCaptcha, shareUrl]);
 
   useEffect(() => {
     if (shareUrl) setVerified(true);

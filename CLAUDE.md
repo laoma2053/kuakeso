@@ -30,6 +30,7 @@ npm run db:migrate     # 创建迁移（生产环境）
 # 后台任务
 npm run worker         # 启动清理 Worker
 npm run db:reset-daily # 重置每日计数
+npm run db:seed        # 初始化种子数据
 ```
 
 ### 生产部署
@@ -101,6 +102,13 @@ docker compose exec web npx prisma db push
 - 记录每次清理的执行结果
 - 关联 `CloudAccount`
 
+**SiteConfig** (网站配置)
+- KV 结构存储网站全局配置（广告、友链等）
+- `key` 唯一标识，`value` 存储 JSON 内容
+
+**SearchLog** (搜索日志)
+- 记录用户搜索关键词，用于分析热门搜索
+
 ### 4. 缓存策略
 
 **搜索缓存** (`search:{keyword}`)
@@ -136,8 +144,16 @@ docker compose exec web npx prisma db push
 /api/save         - 转存资源（需验证码）
 /api/captcha      - 生成验证码
 /api/health       - 健康检查
-/api/admin/accounts - 账号管理（需 ADMIN_TOKEN）
-/api/admin/stats    - 数据统计（需 ADMIN_TOKEN）
+/api/platforms    - 平台列表
+/api/related      - 相关资源推荐
+/api/ads          - 广告数据
+/api/dialog-ads   - 弹窗广告数据
+/api/links-data   - 友链数据
+/api/admin/accounts    - 账号管理（需 ADMIN_TOKEN）
+/api/admin/stats       - 数据统计（需 ADMIN_TOKEN）
+/api/admin/ads         - 广告管理（需 ADMIN_TOKEN）
+/api/admin/dialog-ads  - 弹窗广告管理（需 ADMIN_TOKEN）
+/api/admin/links       - 友链管理（需 ADMIN_TOKEN）
 ```
 
 ### 7. 关键业务逻辑
