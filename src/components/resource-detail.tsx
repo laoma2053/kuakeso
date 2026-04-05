@@ -104,10 +104,18 @@ export function ResourceDetail({ resource }: ResourceDetailProps) {
 
       {/* Tips */}
       <div className="mt-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-        <p className="text-sm text-amber-800 dark:text-amber-200">
-          <strong>温馨提示：</strong>请使用夸克网盘APP或客户端打开链接，转存后即可高速下载。
-          如链接失效，请返回搜索页重新获取。
-        </p>
+        <p className="text-sm text-amber-800 dark:text-amber-200 font-semibold mb-2">温馨提示：</p>
+        <ol className="text-sm text-amber-800 dark:text-amber-200 space-y-1 list-decimal list-inside">
+          <li>请使用夸克网盘APP或客户端打开链接，转存后即可高速下载。</li>
+          <li>如链接失效，请返回搜索页重新获取。</li>
+        </ol>
+      </div>
+
+      {/* 返回首页 */}
+      <div className="mt-4 text-center">
+        <a href="/" className="inline-block px-6 py-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:border-brand-500/30 transition-colors text-sm">
+          返回首页
+        </a>
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ export function SearchHero() {
 
         {/* Search Box */}
         <form onSubmit={handleSearch} className="w-full max-w-2xl mb-4">
-          <div className="bg-surface-card border border-border rounded-2xl shadow-card px-4 sm:px-5 pt-4 pb-3 transition-all duration-200 hover:shadow-card-hover focus-within:shadow-card-hover focus-within:ring-1 focus-within:ring-brand-500/20">
+          <div className="bg-surface-card border border-border rounded-2xl shadow-card px-4 sm:px-5 pt-4 pb-3 transition-all duration-200 hover:shadow-card-hover focus-within:shadow-card-hover focus-within:border-brand-500/40">
 
             {/* 输入区 */}
             <input
