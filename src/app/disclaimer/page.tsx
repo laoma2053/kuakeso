@@ -58,6 +58,12 @@ export default function DisclaimerPage() {
               邮件中请包含：被侵权内容的描述、侵权搜索结果的链接、您的联系方式、版权证明材料。
             </p>
           </section>
+
+          <div className="pt-2 text-center">
+            <a href="/" className="inline-block px-6 py-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:border-brand-500/30 transition-colors text-sm">
+              返回首页
+            </a>
+          </div>
         </div>
       </main>
       <Footer />

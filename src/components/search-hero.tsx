@@ -20,11 +20,12 @@ export function SearchHero() {
   const logoSrc = useMemo(() => Math.random() > 0.5 ? '/pic/logo_zh.png' : '/pic/logo_en.png', []);
 
   useEffect(() => {
+    router.prefetch('/search');
     fetch('/api/platforms')
       .then((r) => r.json())
       .then((d) => { if (d.platforms?.length) setPlatforms(d.platforms); })
       .catch(() => {});
-  }, []);
+  }, [router]);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +47,7 @@ export function SearchHero() {
 
         {/* Search Box */}
         <form onSubmit={handleSearch} className="w-full max-w-2xl mb-4">
-          <div className="bg-surface-card border border-border rounded-2xl shadow-card px-4 sm:px-5 pt-4 pb-3 transition-shadow duration-200 hover:shadow-card-hover focus-within:shadow-card-hover">
+          <div className="bg-surface-card border border-border rounded-2xl shadow-card px-4 sm:px-5 pt-4 pb-3 transition-all duration-200 hover:shadow-card-hover focus-within:shadow-card-hover focus-within:ring-1 focus-within:ring-brand-500/20">
 
             {/* 输入区 */}
             <input
@@ -68,7 +69,7 @@ export function SearchHero() {
                     key={p}
                     type="button"
                     onClick={() => setActivePlatform(p)}
-                    className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all duration-150 ${
+                    className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-all duration-150 ${
                       activePlatform === p
                         ? 'bg-surface-card text-brand-500 shadow-sm'
                         : 'text-text-secondary hover:text-text-primary'

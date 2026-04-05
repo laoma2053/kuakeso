@@ -154,7 +154,7 @@ function SearchResultsContent() {
         {/* Stats */}
         {!loading && query && (
           <p className="text-sm text-text-secondary mb-3">
-            搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
+            搜索 &quot;<span className="text-text-primary font-medium">{query}</span>&quot;
             {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个{PLATFORM_LABELS[platform] ?? platform}资源</>}
           </p>
         )}

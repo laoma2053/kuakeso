@@ -49,6 +49,12 @@ export default function LinksPage() {
               <a href="mailto:so@kuake.so" className="text-brand-500 hover:underline ml-1">so@kuake.so</a>
             </p>
           </div>
+
+          <div className="mt-8 text-center">
+            <a href="/" className="inline-block px-6 py-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:border-brand-500/30 transition-colors text-sm">
+              返回首页
+            </a>
+          </div>
         </div>
       </main>
       <Footer />

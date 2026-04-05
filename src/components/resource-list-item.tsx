@@ -74,12 +74,12 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
   return (
     <>
-      <div className="border border-border rounded-lg p-3 hover:ring-1 hover:ring-border transition-all">
+      <div className="border border-border rounded-lg p-3 hover:shadow-card-hover hover:border-brand-500/20 transition-all duration-200">
         {/* 标题 */}
         <a
           href="#"
           onClick={handleTitleClick}
-          className={`text-lg font-medium line-clamp-1 hover:underline transition-colors ${
+          className={`text-lg font-semibold line-clamp-1 hover:underline transition-colors ${
             shareUrl ? 'text-accent-500' : 'text-text-primary'
           }`}
         >
