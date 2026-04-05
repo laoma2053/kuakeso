@@ -138,7 +138,7 @@ function SearchResultsContent() {
                          placeholder:text-text-tertiary
                          shadow-card
                          transition-all duration-200
-                         focus:outline-none focus:shadow-card-hover focus:border-brand-500/40
+                         focus:outline-none focus:border-brand-500/40
                          hover:shadow-card-hover
                          appearance-none"
             />
@@ -153,7 +153,7 @@ function SearchResultsContent() {
         {!loading && query && (
           <p className="text-sm text-text-secondary mb-3">
             搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
-            {total > 0 && <>，找到 <span className="font-semibold text-text-primary">{total} 个{PLATFORM_LABELS[platform] ?? platform}</span>资源</>}
+            {total > 0 && <>，找到 <span className="font-semibold text-text-primary">{total}</span> 个 <span className="font-semibold text-text-primary">{PLATFORM_LABELS[platform] ?? platform}</span> 资源</>}
           </p>
         )}
 

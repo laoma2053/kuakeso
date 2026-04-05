@@ -51,7 +51,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 # sharp is required for image optimization in standalone mode
 # Install AFTER standalone copy so it's not overwritten
-RUN npm install --os=linux --cpu=x64 sharp@0.33.5
+RUN npm install --os=linux --cpu=x64 sharp@0.33.5 --registry https://registry.npmmirror.com
 
 USER nextjs
 

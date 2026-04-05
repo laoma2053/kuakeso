@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { ExternalLink, Loader2 } from 'lucide-react';
 import { CaptchaDialog } from './captcha-dialog';
-import Link from 'next/link';
 
 export interface ResourceItem {
   url: string;
@@ -31,11 +29,7 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
   const handleTitleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (shareUrl) {
-      window.open(shareUrl, '_blank');
-    } else {
-      setShowCaptcha(true);
-    }
+    setShowCaptcha(true);
   };
 
   const handleCaptchaSuccess = useCallback(async () => {
