@@ -29,6 +29,7 @@ export default function AccountsPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState('');
   const [newCookie, setNewCookie] = useState('');
+  const [newSaveDirId, setNewSaveDirId] = useState('');
   const [saving, setSaving] = useState(false);
 
   const fetchAccounts = useCallback(async () => {
@@ -53,13 +54,14 @@ export default function AccountsPage() {
       const res = await fetch('/api/admin/accounts', {
         method: 'POST',
         headers: authHeaders(),
-        body: JSON.stringify({ name: newName, cookie: newCookie }),
+        body: JSON.stringify({ name: newName, cookie: newCookie, saveDirId: newSaveDirId || undefined }),
       });
       const data = await res.json();
       if (res.ok) {
         setShowAddForm(false);
         setNewName('');
         setNewCookie('');
+        setNewSaveDirId('');
         fetchAccounts();
       } else {
         alert(data.error || '添加失败');
@@ -129,7 +131,14 @@ export default function AccountsPage() {
               value={newCookie}
               onChange={(e) => setNewCookie(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-border text-sm mb-3 resize-none focus:outline-none focus:border-brand-500/40"
+              className="w-full px-3 py-2 rounded-lg border border-border text-sm mb-2 resize-none focus:outline-none focus:border-brand-500/40"
+            />
+            <input
+              type="text"
+              placeholder="转存目录 fid（可选，留空则使用环境变量 SAVE_DIR）"
+              value={newSaveDirId}
+              onChange={(e) => setNewSaveDirId(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-border text-sm mb-3 focus:outline-none focus:border-brand-500/40"
             />
             <div className="flex gap-2">
               <button onClick={handleAdd} disabled={saving} className="px-4 py-1.5 rounded-lg bg-brand-500 text-white text-sm disabled:opacity-50">

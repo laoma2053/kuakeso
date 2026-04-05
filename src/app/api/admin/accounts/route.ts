@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   if (!verifyAdmin(req)) return unauthorizedResponse();
 
   const body = await req.json();
-  const { name, cookie } = body;
+  const { name, cookie, saveDirId } = body;
 
   if (!cookie) {
     return NextResponse.json({ error: '请提供Cookie' }, { status: 400 });
@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
         name: name || info.nickname || '夸克账号',
         platform: 'quark',
         cookie,
+        saveDirId: saveDirId || null,
         usedSpace: 0,
         totalSpace: 0,
         isActive: true,

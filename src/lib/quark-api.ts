@@ -617,7 +617,8 @@ export class QuarkAPI {
    */
   async saveAndShare(
     shareUrl: string,
-    saveDirPath: string = '/来自搜索站'
+    saveDirPathOrFid: string = '/来自搜索站',
+    isFid: boolean = false
   ): Promise<{
     ok: boolean;
     shareInfo?: ShareInfo;
@@ -652,9 +653,9 @@ export class QuarkAPI {
     const finalFileList = fileList;
 
     // 4. 确保保存目录存在
-    const saveDirFid = await this.ensureDir(saveDirPath);
+    const saveDirFid = isFid ? saveDirPathOrFid : await this.ensureDir(saveDirPathOrFid);
     if (!saveDirFid) {
-      console.error('❌ [转存分享] 步骤4/7 创建保存目录失败:', saveDirPath);
+      console.error('❌ [转存分享] 步骤4/7 创建保存目录失败:', saveDirPathOrFid);
       return { ok: false, message: '创建保存目录失败' };
     }
     console.log('📁 [转存分享] 步骤4/7 保存目录就绪: fid=', saveDirFid);
