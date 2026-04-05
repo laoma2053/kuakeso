@@ -21,9 +21,9 @@ interface ResourceListItemProps {
 
 export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceListItemProps) {
   const [showCaptcha, setShowCaptcha] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const title = resource.note || extractTitle(resource.url);
   const timeAgo = resource.datetime ? formatRelativeTime(resource.datetime) : null;
@@ -39,9 +39,9 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
   };
 
   const handleCaptchaSuccess = useCallback(async () => {
-    setShowCaptcha(false);
-    setLoading(true);
-    setError(null);
+    // 不关闭弹窗，在弹窗内显示 loading
+    setSaving(true);
+    setSaveError(null);
 
     try {
       const res = await fetch('/api/save', {
@@ -57,8 +57,11 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
       const data = await res.json();
       if (!res.ok) {
         if (data.invalid && onInvalid) {
-          setError('该资源已失效');
-          setTimeout(() => onInvalid(resource.url), 1500);
+          setSaveError('该资源已失效');
+          setTimeout(() => {
+            setShowCaptcha(false);
+            onInvalid(resource.url);
+          }, 2000);
           return;
         }
         throw new Error(data.error || '获取资源失败');
@@ -66,9 +69,10 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
 
       setShareUrl(data.shareUrl);
     } catch (err: any) {
-      setError(err.message || '网络错误');
+      setSaveError(err.message || '网络错误');
+      setTimeout(() => setShowCaptcha(false), 2000);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   }, [resource.url, resource.password, resource.note, title, onInvalid]);
 
@@ -93,17 +97,6 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
           <span>{sourceLabel}</span>
           {resource.password && <><span>·</span><span className="text-amber-500">有密码</span></>}
         </div>
-
-        {/* 错误提示 */}
-        {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-
-        {/* 加载状态 */}
-        {loading && (
-          <div className="flex items-center gap-2 mt-2 text-sm text-text-secondary">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>获取中...</span>
-          </div>
-        )}
       </div>
 
       <CaptchaDialog
@@ -112,6 +105,8 @@ export function ResourceListItem({ resource, searchQuery, onInvalid }: ResourceL
         onSuccess={handleCaptchaSuccess}
         resourceTitle={title}
         shareUrl={shareUrl}
+        saving={saving}
+        saveError={saveError}
       />
     </>
   );

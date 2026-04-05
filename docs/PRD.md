@@ -482,4 +482,3 @@ Phase 3 — 可选扩展
 3. **quark-save**: https://github.com/henggedaren/quark-save
 4. **pansou**: https://github.com/fish2018/pansou
 5. **xinyue-search**: https://github.com/675061370/xinyue-search
-5. **搜索合规**: 不主动推荐敏感内容，搜索结果取决于PanSou API返回
