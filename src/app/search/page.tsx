@@ -131,18 +131,16 @@ function SearchResultsContent() {
               placeholder="输入关键词搜索资源..."
               enterKeyHint="search"
               className="w-full px-4 sm:px-5 py-2.5 sm:py-3.5
-                         bg-white
+                         bg-surface-card
                          border border-border
-                         rounded-full
+                         rounded-2xl
                          text-text-primary text-[16px] sm:text-base
                          placeholder:text-text-tertiary
-                         shadow-[0_1px_6px_rgba(32,33,36,0.08)]
-                         transition-shadow duration-200
-                         focus:outline-none
-                         focus:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
-                         hover:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
-                         active:shadow-[0_1px_6px_rgba(32,33,36,0.28)]
-                         md:appearance-none md:shadow-sm md:focus:shadow-md md:hover:shadow-md md:active:shadow-md"
+                         shadow-card
+                         transition-all duration-200
+                         focus:outline-none focus:shadow-card-hover focus:ring-1 focus:ring-brand-500/20
+                         hover:shadow-card-hover
+                         md:appearance-none"
             />
           </form>
 
@@ -154,8 +152,8 @@ function SearchResultsContent() {
         {/* Stats */}
         {!loading && query && (
           <p className="text-sm text-text-secondary mb-3">
-            搜索 &quot;<span className="text-text-primary font-medium">{query}</span>&quot;
-            {total > 0 && <>，找到 <span className="font-medium text-text-primary">{total}</span> 个{PLATFORM_LABELS[platform] ?? platform}资源</>}
+            搜索 &quot;<span className="text-brand-500 font-medium">{query}</span>&quot;
+            {total > 0 && <>，找到 <span className="font-semibold text-text-primary">{total}</span> 个<span className="font-semibold text-text-primary">{PLATFORM_LABELS[platform] ?? platform}</span>资源</>}
           </p>
         )}
 
