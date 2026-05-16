@@ -54,7 +54,7 @@ export function SearchHero() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="输入您想找的网盘资源"
+              placeholder="输入你想找的网盘资源"
               enterKeyHint="search"
               className="w-full bg-transparent text-text-primary text-[16px] sm:text-lg placeholder:text-text-tertiary focus:outline-none mb-3 md:appearance-none"
             />
