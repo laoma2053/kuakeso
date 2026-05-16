@@ -35,7 +35,7 @@ export function SearchHero() {
   }, [query, activePlatform, router]);
 
   return (
-    <section className="flex-1 flex flex-col items-center px-4 pt-[20vh]">
+    <section className="flex-1 flex flex-col items-center px-4 pt-[calc(20vh+3.5rem)]">
       <div className="flex flex-col items-center w-full">
 
         {/* Logo */}
