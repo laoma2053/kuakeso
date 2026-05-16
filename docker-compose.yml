@@ -90,5 +90,5 @@ services:
 
 networks:
   pansou-net:
-    name: panso_pansou-network
+    name: pansou_pansou-network
     external: true                               # 使用 PanSou 容器所在的外部网络

@@ -471,7 +471,7 @@ Phase 3 — 可选扩展
 3. **API稳定性**: 夸克非官方API可能变动，需做好异常处理和降级
 4. **数据安全**: Cookie加密存储，后台需认证访问
 5. **搜索合规**: 不主动推荐敏感内容，搜索结果取决于PanSou API返回
-```
+
 ---
 
 ## 十二、参考开源项目
@@ -482,3 +482,10 @@ Phase 3 — 可选扩展
 3. **quark-save**: https://github.com/henggedaren/quark-save
 4. **pansou**: https://github.com/fish2018/pansou
 5. **xinyue-search**: https://github.com/675061370/xinyue-search
+```
+---
+
+## 十三、待优化的细节
+
+1. 平板端：验证码弹窗不在屏幕居中位置；平板端应该按照手机端同样的处理逻辑，不需要扫码获取链接
+2. 电脑端：搜索结果页的顶部搜索框，当鼠标点击搜索框时，搜索框边框色过渡，中间有一个黑色的过渡跳动，应该要去掉
